@@ -6,10 +6,6 @@ import argparse
 import numpy as np
 import os
 import json
-import sys
-
-sys.path.append(os.path.abspath(os.path.dirname(__file__)))
-from functions import FuncIMI as imi
 import rclpy
 from rclpy.node import Node
 from gpt_interface.srv import GPT
@@ -17,12 +13,13 @@ from gpt_interface.srv import GPT
 
 class GPTAssistant:
     def __init__(self) -> None:
+        dir_path = os.path.dirname(__file__)
         parser = argparse.ArgumentParser()
-        parser.add_argument("--prompt", type=str, default=os.path.join(os.path.dirname(__file__), "prompts/basic.txt"))
-        parser.add_argument("--sysprompt", type=str, default=os.path.join(os.path.dirname(__file__), "system_prompts/mj_basic.txt"))
+        parser.add_argument("--prompt", type=str, default=os.path.join(dir_path, "prompts/basic.txt"))
+        parser.add_argument("--sysprompt", type=str, default=os.path.join(dir_path, "system_prompts/mj_basic.txt"))
         args = parser.parse_args()
 
-        with open(os.path.join(os.path.dirname(__file__), "config.json"), "r") as f:
+        with open(os.path.join(dir_path, "config.json"), "r") as f:
             config = json.load(f)
 
         print("Initializing ChatGPT...")

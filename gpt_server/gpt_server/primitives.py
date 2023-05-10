@@ -1,7 +1,7 @@
-class FuncIMI():
+class PrimitiveSet():
     def __init__(self) -> None:
         pass
 
-    def openGripper(angle):
+    def openGripper(self, angle):
         print("open the gripper to {}".format(angle))
         
