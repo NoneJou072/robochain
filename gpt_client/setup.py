@@ -25,7 +25,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            "gpt_client = gpt_client.gpt_pub:main"
+            "gpt_client = gpt_client.gpt_client:main"
         ],
     },
 )

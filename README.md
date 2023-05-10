@@ -39,13 +39,16 @@ for development.
     pip install -r src/requirements.txt
    rosdep install --from-paths src --ignore-src -r -y
    ```
-4. build the workspace
+4. build and source the workspace
     ```
    colcon build --symlink-install
+   source install/local_setup.sh
    ```
    
 ## Usage
-
+Start the server and client respectively in two terminals, wait for the client
+initialization to complete, We can enter requests or questions in the terminal
+and wait for the server to execute or respond.
 ---
 ### 1. Change setting
 a. rewrite `gpt_client/gpt_client/config.json` file，instead of your openai-key
@@ -62,6 +65,32 @@ ros2 run gpt_server gpt_server
 # Terminal 2
 ros2 run gpt_client gpt_client
 ```
+<div style="display: flex;">
+  <div style="flex: 50%;">
+    <img src="docs/assets/client_test.png" alt="Image 1">
+  </div>
+  <div style="flex: 54%;">
+    <img src="docs/assets/server_test.png" alt="Image 2">
+  </div>
+</div>
+
+### 3. Extra Command
+
+| Command | Description  |
+|---------|--------------|
+| !exit   | exit process |
+| !quit   | exit process |
+| !clear  | clear screen |
+
+### 4. Robotic Prompt
+
+Refer to Microsoft's [PromptCraft-Robotics](https://github.com/microsoft/PromptCraft-Robotics),
+We have a small number of basic robot prompts built in, stored in `gpt_client/prompts`. According to these prompts,
+GPT can recognize our instructions and convert them into executable Python code on the server side for execution. Developers can add their own
+The prompt words, so that the robot can perform the corresponding task according to the general description. The task primitive instantiation contained in each task prompt word is stored in
+`gpt_server/primitives.py`.  
+In addition, in order for GPT to successfully generate Python code that can be extracted, we need to implant "personality rules" into it during initialization. specifically,
+See `gpt_client/system_prompts/mj_basic.txt`.
 
 ## License
 ```

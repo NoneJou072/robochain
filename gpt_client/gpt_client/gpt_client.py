@@ -1,9 +1,7 @@
-#!~/anaconda3/bin/python
 from typing import List
 import openai
 import re
 import argparse
-import numpy as np
 import os
 import json
 import rclpy
@@ -12,6 +10,9 @@ from gpt_interface.srv import GPT
 
 
 class GPTAssistant:
+    """
+        Load ChatGPT config and your custom pre-prompts.
+    """
     def __init__(self) -> None:
         dir_path = os.path.dirname(__file__)
         parser = argparse.ArgumentParser()
@@ -40,10 +41,10 @@ class GPTAssistant:
             {
                 "role": "assistant",
                 "content": """```python
-        imi.openGripper(imi.target_gripper_angle)
-        ```
+imi.openGripper(imi.target_gripper_angle)
+```
 
-        This code uses the `openGripper(imi.target_gripper_angle)` function to open the gripper to a target angle from the current angle."""
+This code uses the `openGripper(imi.target_gripper_angle)` function to open the gripper to a target angle from the current angle."""
             }
         ]
         print(f"Done.")
@@ -51,7 +52,7 @@ class GPTAssistant:
             prompt = f.read()
 
         self.ask(prompt)
-        print("Welcome to the Mujoco chatbot! I am ready to help you with your Mujoco questions and commands.")
+        print(self.colors.BLUE + "Welcome to the SimBot! I am ready to help you with your questions and commands." + self.colors.ENDC)
 
     def ask(self, prompt):
         self.chat_history.append(
@@ -86,29 +87,34 @@ class GPTClient(Node):
         super().__init__(node_name)
         self.get_logger().info("%s already." % node_name)
         self.gpt_client = self.create_client(GPT, "gpt_service")
+        while not self.gpt_client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().warn('Waiting for the server to go online...')
     
     def result_callback(self, result):
         response = result.result()
     
     def send_msg(self, msg):
+        """
+            Send messages to server.
+        """
         request = GPT.Request()
         request.data = msg
         self.gpt_client.call_async(request).add_done_callback(self.result_callback)
 
 
 def main(args=None):
-
     rclpy.init(args=args)
-    node = GPTClient("node_gpt")
+    node = GPTClient("gpt_client")
     gpt = GPTAssistant()
+
     while rclpy.ok():
-        question = input(gpt.colors.YELLOW + "AirSim> " + gpt.colors.ENDC)
+        question = input(gpt.colors.YELLOW + "Assistant> " + gpt.colors.ENDC)
 
         if question == "!quit" or question == "!exit":
             break
 
         if question == "!clear":
-            os.system("cls")
+            os.system("clear")
             continue
 
         response = gpt.ask(question)
@@ -116,4 +122,5 @@ def main(args=None):
         print(f"\n{response}\n")
         node.send_msg(response)
     
+    node.destroy_node()
     rclpy.shutdown()
