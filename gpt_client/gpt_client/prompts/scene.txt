@@ -1,0 +1,2 @@
+Here exists a robotic arm in a scene named 'test scene', where contains a table with three jars of different colcors placed randomly on it.
+The colcors of three jars are red, yellow and blue. 

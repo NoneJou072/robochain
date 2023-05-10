@@ -14,25 +14,37 @@ class GPTAssistant:
         Load ChatGPT config and your custom pre-prompts.
     """
     def __init__(self) -> None:
+        print("Initializing ChatGPT...")
+
         dir_path = os.path.dirname(__file__)
         parser = argparse.ArgumentParser()
-        parser.add_argument("--prompt", type=str, default=os.path.join(dir_path, "prompts/basic.txt"))
-        parser.add_argument("--sysprompt", type=str, default=os.path.join(dir_path, "system_prompts/mj_basic.txt"))
+        parser.add_argument("--openai_key", type=str, default=os.path.join(dir_path, "config.json"))
+        parser.add_argument("--pri_prompt", type=str, default=os.path.join(dir_path, "prompts/primitives.txt"))
+        parser.add_argument("--sce_prompt", type=str, default=os.path.join(dir_path, "prompts/scene.txt"))
+        parser.add_argument("--sys_prompt", type=str, default=os.path.join(dir_path, "system_prompts/system.txt"))
         args = parser.parse_args()
 
-        with open(os.path.join(dir_path, "config.json"), "r") as f:
+        with open(args.openai_key, "r") as f:
             config = json.load(f)
-
-        print("Initializing ChatGPT...")
         openai.api_key = config["OPENAI_API_KEY"]
 
-        with open(args.sysprompt, "r") as f:
-            sysprompt = f.read()
+        with open(args.sys_prompt, "r") as f:
+            sys_prompt = f.read()
+
+        with open(args.sce_prompt, "r") as f:
+            sce_prompt = f.read()
+        
+        with open(args.pri_prompt, "r") as f:
+            prompt = f.read()
 
         self.chat_history = [
             {
                 "role": "system",
-                "content": sysprompt
+                "content": sys_prompt
+            },
+            {
+                "role": "system",
+                "content": sce_prompt
             },
             {
                 "role": "user",
@@ -47,11 +59,10 @@ imi.openGripper(imi.target_gripper_angle)
 This code uses the `openGripper(imi.target_gripper_angle)` function to open the gripper to a target angle from the current angle."""
             }
         ]
-        print(f"Done.")
-        with open(args.prompt, "r") as f:
-            prompt = f.read()
 
         self.ask(prompt)
+
+        print(f"Done.")
         print(self.colors.BLUE + "Welcome to the SimBot! I am ready to help you with your questions and commands." + self.colors.ENDC)
 
     def ask(self, prompt):
@@ -74,7 +85,7 @@ This code uses the `openGripper(imi.target_gripper_angle)` function to open the 
         )
         return self.chat_history[-1]["content"]
 
-    class colors:  # You may need to change color settings
+    class colors: 
         RED = "\033[31m"
         ENDC = "\033[m"
         GREEN = "\033[32m"

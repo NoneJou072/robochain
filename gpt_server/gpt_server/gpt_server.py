@@ -46,7 +46,7 @@ class GPTServer(Node):
         else:
             return None
     
-    def execute_python_code(self, imi, code):
+    def execute_python_code(self, pri, code):
         """ Execute python code with the input content.
 
         :param imi(Class): class name in prompts.
@@ -69,12 +69,12 @@ def main(args=None):
     executor.add_node(node)
 
     print(f"Initializing Simulator...")
-    imi = PrimitiveSet()
+    Primitive = PrimitiveSet()
     print(f"Done.")
 
     while rclpy.ok():
         if node.code is not None:
-            node.execute_python_code(imi, node.code)
+            node.execute_python_code(Primitive, node.code)
             node.code = None
 
         """

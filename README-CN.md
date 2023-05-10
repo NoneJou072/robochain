@@ -86,8 +86,10 @@ ros2 run gpt_client gpt_client
 GPT 能识别我们的指令，并在服务端中转换成可以被执行的 Python 代码进行执行。开发者们可以添加自己
 的提示词，让机器人能够根据笼统的描述执行相应的任务。 每个任务提示词包含的任务原语实例化存放在 
 `gpt_server/primitives.py` 中。  
-另外，为了让 GPT 能够顺利生成可以被提取的 Python 代码，我们需要在初始化时为其植入“人格规则”。具体地，
-可以查看 `gpt_client/system_prompts/mj_basic.txt`。
+
+**关于 Prompts 的初始化：** 通常，为了制作符合我们需求的 GPT ，并能够顺利生成可以被提取的 Python 代码，
+我们需要在初始化时通过 `system` 的角色类型进行格式化，然后再交替输入 `user` 和 `assistant` 角色的信息。具体地，可以查看
+ `gpt_client/system_prompts/system.txt`。
 
 ## License
 

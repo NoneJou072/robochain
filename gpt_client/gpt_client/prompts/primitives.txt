@@ -1,0 +1,7 @@
+Here are some functions you can use to command the robot.
+
+pri.openGripper(angle) - open the gripper to specified degree, param 'angle' means the degree.
+pri.closeGripper(angle) - close the gripper to specified degree, param 'angle' means the degree.
+pri.updateTargetPose(pose) - update the target pose of the end effector/gripper, param 'pose' means the target pose as input.
+    If you want to move the end effector to a target point, you need call this function.
+

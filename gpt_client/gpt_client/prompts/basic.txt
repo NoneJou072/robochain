@@ -1,8 +1,0 @@
-Here are some functions you can use to command the robot.
-
-imi.openGripper() - open the gripper.
-imi.closeGripper() - close the gripper.
-
-Here are some property you can use to called.
-
-imi.target_gripper_angle - opening angle of the gripper

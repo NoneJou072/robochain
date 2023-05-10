@@ -46,11 +46,12 @@ to quickly use large models for development.
    source install/local_setup.sh
    ```
    
-## Usage
+## Usage  
+---
 Start the server and client respectively in two terminals, wait for the client
 initialization to complete, We can enter requests or questions in the terminal
 and wait for the server to execute or respond.
----
+
 ### 1. Change setting
 a. rewrite `gpt_client/gpt_client/config.json` file，instead of your openai-key
    ```
@@ -89,9 +90,10 @@ Refer to Microsoft's [PromptCraft-Robotics](https://github.com/microsoft/PromptC
 We have a small number of basic robot prompts built in, stored in `gpt_client/prompts`. According to these prompts,
 GPT can recognize our instructions and convert them into executable Python code on the server side for execution. Developers can add their own
 The prompt words, so that the robot can perform the corresponding task according to the general description. The task primitive instantiation contained in each task prompt word is stored in
-`gpt_server/primitives.py`.  
-In addition, in order for GPT to successfully generate Python code that can be extracted, we need to implant "personality rules" into it during initialization. specifically,
-See `gpt_client/system_prompts/mj_basic.txt`.
+`gpt_server/primitives.py`.
+
+**About the initialization of Prompts:** Usually, in order to make a GPT that meets our needs and successfully generate Python code that can be extracted,
+We need to format through the `system` role type during initialization, and then alternately enter the `user` and `assistant` role information. Specifically, you can view `gpt_client/system_prompts/system.txt`.
 
 ## License
 ```
