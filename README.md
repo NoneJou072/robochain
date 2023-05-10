@@ -16,9 +16,10 @@
 
 ---
 
-Combining the large model (OpenAI-GPT3.5) with the ROS2 (Foxy) communication
-framework makes it easy for robot developers to quickly use the large model
-for development.
+Combining the large model (OpenAI-GPT3.5) with the ROS2 (Foxy) 
+communication framework, adding prompts and task primitives
+The use of (primitives) is convenient for robot developers 
+to quickly use large models for development.
 
 ---
 
