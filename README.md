@@ -9,7 +9,7 @@
 [![LICENSE](https://img.shields.io/badge/License-MIT-informational)](https://nonejou072.github.io/)
 &nbsp;
 
-> A simulation framework based on ROS2 and ChatGPT for robot interaction tasks in the era of large models
+> A simulation framework based on ROS2 and ChatGPT for robot interaction tasks in the era of large models.  
 > English | [中文文档](README-CN.md)
 
 ## Introduction
