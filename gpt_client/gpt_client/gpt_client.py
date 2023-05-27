@@ -8,7 +8,6 @@ import rclpy
 from rclpy.node import Node
 from gpt_interface.srv import GPT
 
-
 class GPTAssistant:
     """
         Load ChatGPT config and your custom pre-prompts.
@@ -63,6 +62,7 @@ This code uses the `openGripper(imi.target_gripper_angle)` function to open the 
         self.ask(prompt)
 
         print(f"Done.")
+        os.system("clear")
         print(self.colors.BLUE + "Welcome to the SimBot! I am ready to help you with your questions and commands." + self.colors.ENDC)
 
     def ask(self, prompt):
@@ -119,7 +119,7 @@ def main(args=None):
     gpt = GPTAssistant()
 
     while rclpy.ok():
-        question = input(gpt.colors.YELLOW + "Assistant> " + gpt.colors.ENDC)
+        question = input(gpt.colors.YELLOW + "User💬> " + gpt.colors.ENDC)
 
         if question == "!quit" or question == "!exit":
             break
@@ -130,7 +130,7 @@ def main(args=None):
 
         response = gpt.ask(question)
 
-        print(f"\n{response}\n")
+        print(gpt.colors.GREEN + "Assistant🤖> " + gpt.colors.ENDC + f"{response}")
         node.send_msg(response)
     
     node.destroy_node()

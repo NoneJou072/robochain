@@ -4,8 +4,11 @@ import rclpy
 from rclpy.node import Node
 from rclpy.executors import SingleThreadedExecutor
 from gpt_interface.srv import GPT
+from roboimi.envs import MotionPlanEnv
+import numpy as np
 import os
 import sys
+import roboimi.utils.KDL_utils.transform as T
 
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 from primitives import PrimitiveSet
@@ -45,11 +48,11 @@ class GPTServer(Node):
             return full_code
         else:
             return None
-    
+
     def execute_python_code(self, pri, code):
         """ Execute python code with the input content.
 
-        :param imi(Class): class name in prompts.
+        :param pri(Class): class name in prompts.
         :param code(str): python method to call.
         """
         print("\033[32m" + "Please wait while I run the code in Sim..." + "\033[m")
@@ -62,24 +65,54 @@ class GPTServer(Node):
 
 
 def main(args=None):
+    print(f"Initializing Simulator...")
+
+    from roboimi.assets.robots.diana_med import DianaMed
+
+    env = MotionPlanEnv(
+        robot=DianaMed(),
+        renderer="mujoco_viewer",
+        is_render=True,
+        control_freq=200,
+        is_interpolate=True,
+        is_pd=True
+    )
+    env.reset()
+    print(f"Done.")
+
+    print(f"Initializing ROS...")
     rclpy.init(args=args)
     node = GPTServer("gpt_server")
     node.get_logger().info("Gpt server has init.")
     executor = SingleThreadedExecutor()
     executor.add_node(node)
-
-    print(f"Initializing Simulator...")
-    Primitive = PrimitiveSet()
     print(f"Done.")
 
+    Primitive = PrimitiveSet()
+    init_pos, init_rot = env.kdl_solver.getEeCurrentPose(env.robot.single_arm.arm_qpos)
+    init_pos[1] += 0.1
+    init_pos[2] += 0.1
+    init_quat = T.changeQuat("xyzw", T.mat2Quaternion(init_rot))
+    print("Test primitive...")
+    env.move(init_pos, env.can_quat['ceramic_can'])
+    print("Done.")
+
+    # import threading
+    # cam_thread = threading.Thread(target=env.camera_viewer)
+    # cam_thread.start()
+    
     while rclpy.ok():
         if node.code is not None:
-            node.execute_python_code(Primitive, node.code)
+            node.execute_python_code(env, node.code)
             node.code = None
 
         """
             <Write your main loop here.>
         """
+
+        env.step(env.action)
+        if env.is_render:
+            env.render()
 
         if not executor.spin_once(timeout_sec=0.001):
             time.sleep(0.001)  # Sleep for a short duration before checking again

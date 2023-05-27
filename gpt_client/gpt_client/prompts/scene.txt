@@ -1,2 +1,3 @@
-Here exists a robotic arm in a scene named 'test scene', where contains a table with three jars of different colcors placed randomly on it.
-The colcors of three jars are red, yellow and blue. 
+Here exists a robotic arm in a scene named 'test scene', where contains a table with 
+three kinds of cans placed randomly on it. The names of the three jars are 'coke_can',
+'ceramic_can' and 'glass_can'.
