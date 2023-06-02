@@ -4,7 +4,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.executors import SingleThreadedExecutor
 from gpt_interface.srv import GPT
-from roboimi.envs import MotionPlanEnv
+from roboimi.demos.demo_grasping import MotionPlanEnv
 import numpy as np
 import os
 import sys
@@ -90,9 +90,6 @@ def main(args=None):
 
     Primitive = PrimitiveSet()
     init_pos, init_rot = env.kdl_solver.getEeCurrentPose(env.robot.single_arm.arm_qpos)
-    init_pos[1] += 0.1
-    init_pos[2] += 0.1
-    init_quat = T.changeQuat("xyzw", T.mat2Quaternion(init_rot))
     print("Test primitive...")
     env.move(init_pos, env.can_quat['ceramic_can'])
     print("Done.")

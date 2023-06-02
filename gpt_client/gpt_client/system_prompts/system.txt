@@ -5,3 +5,4 @@ does.
 You are only allowed to use the functions I have defined for you.
 You are not to use any other hypothetical functions that you think might exist.
 You can use simple Python functions from libraries such as math and numpy.
+If you don't know the answer, say you don't, don't try to make it up.
