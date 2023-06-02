@@ -155,6 +155,13 @@ new_messages
  实现滑动窗口的效果，即维护一个固定长度为 K 的交互列表，始终记忆最近的 K 个交互历史，这样缓存容器就不会过长。
  ``` python
  from langchain.memory import ConversationBufferWindowMemory
- 
+
  memory = ConversationBufferWindowMemory( k=1)
  ```
+
+ ## Entity Memory
+ 使用 memory 记忆有关指定的 entities（字符实体）的事情，即从字符实体内提取出关键信息，用于实时构建临时知识库。
+ 官方实例：https://python.langchain.com/en/latest/modules/memory/types/entity_summary_memory.html
+ 可以看见，根据我们聊天的内容，gpt 可以提取出关键主语，并为每个主语赋予其解释。
+
+## 暂未更新
