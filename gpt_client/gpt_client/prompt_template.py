@@ -25,7 +25,7 @@ class PromptLoader:
 
     @property
     def sys_prompt(self) -> str:
-        with open(os.path.join(self.dir_path, "system_prompts/system.txt")) as f:
+        with open(os.path.join(self.dir_path, "prompts/system.txt")) as f:
             prompt = f.read()
         return prompt
 

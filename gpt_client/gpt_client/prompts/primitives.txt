@@ -1,13 +1,13 @@
 Here are some functions you can use to command the robot.
 
-pri.gripper_ctrl(command) - ctrl the gripper, param 'command' is string type.
-pri.move(pos, quat) - set the target pose of the end effector/gripper, param 'pos' means the target position as input.
-    Param 'quat' means the target quaternion as input.If you want to move the end effector to a target point, you need call this function.
-    If you call this function, the gripper will move to this target.
+pri.gripper_ctrl(command) - Ctrl the gripper, param 'command' is a string type, consist of 'open' and 'close'.
+pri.move(pos, quat) - Set the target pose of the end effector/gripper. The func takes 2 parameters as input, first param 'pos' means the target position.
+    another 'quat' means the target quaternion. Both of them are type ndarray. If you want to move the end effector to a target point, you need call this function, then the gripper will move to this target.
+pri.getCurrentPose() -> tuple[pos, quat] - Get current pose of the end effector/gripper. This'll returns 2 params, include position and quaternion of the end effector/gripper.
 
 Here are some properties you can use.
-pri.can_pos - present the position of can object。
-pri.can_quat - present the quaternion of can object。
+pri.can_pos - present the position of all can objects, it's a dict type, the key corresponds to the name of the objects。
+pri.can_quat - present the quaternion of all can objects, it's a dict type, the key corresponds to the name of the objects。
 
 Here are some rules you need note.
 If there is a method not mentioned above, don't generate it.

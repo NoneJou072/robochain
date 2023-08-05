@@ -67,7 +67,7 @@ class GPTServer(Node):
 def main(args=None):
     print(f"Initializing Simulator...")
 
-    from roboimi.assets.robots.diana_med import DianaMed
+    from roboimi.assets.robots.diana_grasp import DianaMed
 
     env = MotionPlanEnv(
         robot=DianaMed(),
