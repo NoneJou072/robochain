@@ -32,9 +32,9 @@ class PromptLoader:
 _ROBOT_PROMPT_TEMPLATE = f"""
 {PromptLoader().sys_prompt}
 ----------
-{PromptLoader().pri_prompt}
-----------
 {PromptLoader().sce_prompt}
+----------
+{PromptLoader().pri_prompt}
 ----------
 """
 

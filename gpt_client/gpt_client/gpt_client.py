@@ -81,8 +81,8 @@ class GPTClient(Node):
         super().__init__(node_name)
         self.get_logger().info("%s already." % node_name)
         self.gpt_client = self.create_client(GPT, "gpt_service")
-        while not self.gpt_client.wait_for_service(timeout_sec=1.0):
-            self.get_logger().warn('Waiting for the server to go online...')
+        # while not self.gpt_client.wait_for_service(timeout_sec=1.0):
+        #     self.get_logger().warn('Waiting for the server to go online...')
 
     def result_callback(self, result):
         response = result.result()
@@ -112,7 +112,7 @@ def main(args=None):
         # 发送问题
         result = gpt.conversation.predict(input=question)
         print(colors.GREEN + "Assistant🤖> " + colors.ENDC + f"{result}")
-        node.send_msg(result)
+        # node.send_msg(result)
 
     node.destroy_node()
     rclpy.shutdown()
