@@ -20,7 +20,7 @@
 （primitives）的使用，方便机器人开发人员快速使用大模型进行开发。
 
 
-## 快速部署
+## 部署
 
 --- 
 
@@ -71,6 +71,13 @@ ros2 run gpt_client gpt_client
     <img src="docs/assets/server_test.png" alt="Image 2">
   </div>
 </div>
+
+示例指令：  
+* 场景一-物体抓取：
+  * `pick up the coke can`-
+  * `put it down 10cm to the front of the cermatic can.`-
+
+* 场景二-绘画
 
 ### 3. 额外命令
 

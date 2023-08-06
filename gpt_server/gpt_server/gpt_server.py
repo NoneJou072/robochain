@@ -91,7 +91,7 @@ def main(args=None):
     Primitive = PrimitiveSet()
     init_pos, init_rot = env.kdl_solver.getEeCurrentPose(env.robot.single_arm.arm_qpos)
     print("Test primitive...")
-    env.move(init_pos, env.can_quat['ceramic_can'])
+    env.move(init_pos, env.can_quat['white_block'])
     print("Done.")
 
     # import threading

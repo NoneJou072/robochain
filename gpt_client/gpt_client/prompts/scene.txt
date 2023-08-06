@@ -1,2 +1,2 @@
 You are working in a scenario, where exists a robotic arm with the gripper, a table which has 
-three kinds of cans randomly placed on it, called 'coke_can', 'ceramic_can' and 'glass_can'.
+three kinds of blocks randomly placed on it, called 'red_block', 'white_block' and 'green_block'.
