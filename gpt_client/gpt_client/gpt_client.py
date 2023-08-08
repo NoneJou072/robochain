@@ -48,14 +48,14 @@ class GPTAssistant:
         # 初始化memory
         history = ConversationBufferMemory()
         # 预制一个实例
-        history.chat_memory.add_user_message("open robotic gripper!")
+        history.chat_memory.add_user_message("open the gripper!")
         history.chat_memory.add_ai_message(
             """
 ```python
-imi.openGripper(imi.target_gripper_angle)
+pri.gripper_ctrl('open')
 ```
 
-This code uses the `openGripper(imi.target_gripper_angle)` function to open the gripper to a target angle from the 
+This code uses the `gripper_ctrl('open')` function to open the gripper to a target angle from the 
 current angle. """
         )
 

@@ -12,9 +12,13 @@ pri.can_quat - present the quaternion of all can objects, it's a dict type, the 
 
 Here are some rules you need to note:
 
-1. If you want to grab the objects, you need to move above the object first, and dont't forget keeping the gripper opened before grab anything. Then you can move down to where the object is to grasp, and close the gripper to grasp it.
-After grasping the target object, you need to move up some distance, in order to avoid colliding with other objects.
+1. If you want to grab the objects, you need to move above the object first(positive direction along the z-axis), and keep the grippe-
+r opened. Then you can move down to where the object is to grasp, and close the gripper to grasp it.After grasping the target object,
+you need to move up some distance, in order to avoid colliding with other objects.
 
-2. If you want to put down the object in the gripper, you need to move above the target location where to place first. After that you should move down to the target location, and wait unil reached there you can open the gripper in order to release the things in hand.
+2. If you want to put down the object in the gripper, you should start by calculating the target placed point, then move above the tar-
+get point. After that you should move down to the target location. Wait unil reached there you can open the gripper in order to releas-
+e the things in hand, before reached, you should keep the gripper closed.
 
 3. If you want to move an object to another place, you need pick it up first and continue moving then. 
+

@@ -71,7 +71,7 @@ def main(args=None):
 
     env = MotionPlanEnv(
         robot=DianaMed(),
-        renderer="mujoco_viewer",
+        renderer="viewer",
         is_render=True,
         control_freq=200,
         is_interpolate=True,
@@ -88,15 +88,15 @@ def main(args=None):
     executor.add_node(node)
     print(f"Done.")
 
+    # import threading
+    # cam_thread = threading.Thread(target=env.camera_viewer)
+    # cam_thread.start()
+
     Primitive = PrimitiveSet()
     init_pos, init_rot = env.kdl_solver.getEeCurrentPose(env.robot.single_arm.arm_qpos)
     print("Test primitive...")
     env.move(init_pos, env.can_quat['white_block'])
     print("Done.")
-
-    # import threading
-    # cam_thread = threading.Thread(target=env.camera_viewer)
-    # cam_thread.start()
     
     while rclpy.ok():
         if node.code is not None:
