@@ -11,7 +11,10 @@ import sys
 import roboimi.utils.KDL_utils.transform as T
 
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+sys.path.append('/home/zhouhr/mujoco_diana/')
+print(sys.path)
 from primitives import PrimitiveSet
+from imi_admittance.examples.demo_domain_randomization import AdmitPlane
 
 
 class GPTServer(Node):
@@ -64,19 +67,32 @@ class GPTServer(Node):
         print("\033[32m" + "Done!\n" + "\033[m")
 
 
+def select_env(id):
+    if id==0:
+        from roboimi.assets.robots.diana_grasp import DianaMed
+        env = MotionPlanEnv(
+            robot=DianaMed(),
+            renderer="viewer",
+            is_render=True,
+            control_freq=200,
+            is_interpolate=True,
+            is_pd=True
+        )
+    else:
+        env = AdmitPlane(
+            is_render=True,
+            renderer="mujoco_viewer",
+            control_freq=200,
+            is_interpolate=True,
+            is_pd=False,
+            is_planning=True
+        )
+    return env
+
 def main(args=None):
     print(f"Initializing Simulator...")
 
-    from roboimi.assets.robots.diana_grasp import DianaMed
-
-    env = MotionPlanEnv(
-        robot=DianaMed(),
-        renderer="viewer",
-        is_render=True,
-        control_freq=200,
-        is_interpolate=True,
-        is_pd=True
-    )
+    env = select_env(0)
     env.reset()
     print(f"Done.")
 
@@ -92,9 +108,8 @@ def main(args=None):
     # cam_thread = threading.Thread(target=env.camera_viewer)
     # cam_thread.start()
 
-    Primitive = PrimitiveSet()
-    init_pos, init_rot = env.kdl_solver.getEeCurrentPose(env.robot.single_arm.arm_qpos)
     print("Test primitive...")
+    init_pos, init_rot = env.kdl_solver.getEeCurrentPose(env.robot.single_arm.arm_qpos)
     env.move(init_pos, env.can_quat['white_block'])
     print("Done.")
     
@@ -106,8 +121,9 @@ def main(args=None):
         """
             <Write your main loop here.>
         """
-
         env.step(env.action)
+        # env.step(np.array([-0.1, -0.9, -0.1, -0.99]))
+
         if env.is_render:
             env.render()
 

@@ -1,0 +1,4 @@
+# Scenario-2, Drawing-Master:
+You are working in a scenario, where exists an artboard placed vertically in front of you. 
+There is a brush in your gripper with the tip oriented towards the artboard.
+By controlling the movement of the end, you can draw some simple lines.
