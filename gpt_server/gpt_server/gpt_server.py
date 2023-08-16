@@ -1,13 +1,16 @@
 import re
 import time
+import os
+import sys
+import logging
+import numpy as np
+
 import rclpy
 from rclpy.node import Node
 from rclpy.executors import SingleThreadedExecutor
 from gpt_interface.srv import GPT
+
 from roboimi.demos.demo_grasping import MotionPlanEnv
-import numpy as np
-import os
-import sys
 import roboimi.utils.KDL_utils.transform as T
 
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
@@ -16,6 +19,7 @@ print(sys.path)
 from primitives import PrimitiveSet
 from imi_admittance.examples.demo_domain_randomization import AdmitPlane
 
+logging.basicConfig(level=logging.INFO)
 
 class GPTServer(Node):
     """
@@ -81,37 +85,31 @@ def select_env(id):
     else:
         env = AdmitPlane(
             is_render=True,
-            renderer="mujoco_viewer",
+            renderer="viewer",
             control_freq=200,
-            is_interpolate=True,
-            is_pd=False,
+            is_interpolate=False,
+            is_pd=True,
             is_planning=True
         )
     return env
 
 def main(args=None):
-    print(f"Initializing Simulator...")
-
+    logging.info(f"Initializing Simulator...")
     env = select_env(0)
     env.reset()
-    print(f"Done.")
+    logging.info(f"Done.")
 
-    print(f"Initializing ROS...")
+    logging.info(f"Initializing ROS...")
     rclpy.init(args=args)
     node = GPTServer("gpt_server")
     node.get_logger().info("Gpt server has init.")
     executor = SingleThreadedExecutor()
     executor.add_node(node)
-    print(f"Done.")
+    logging.info(f"Done.")
 
     # import threading
     # cam_thread = threading.Thread(target=env.camera_viewer)
     # cam_thread.start()
-
-    print("Test primitive...")
-    init_pos, init_rot = env.kdl_solver.getEeCurrentPose(env.robot.single_arm.arm_qpos)
-    env.move(init_pos, env.can_quat['white_block'])
-    print("Done.")
     
     while rclpy.ok():
         if node.code is not None:
@@ -122,7 +120,7 @@ def main(args=None):
             <Write your main loop here.>
         """
         env.step(env.action)
-        # env.step(np.array([-0.1, -0.9, -0.1, -0.99]))
+        # env.step(np.array([-0.1, -0.9, -0.99, 0.9]))
 
         if env.is_render:
             env.render()

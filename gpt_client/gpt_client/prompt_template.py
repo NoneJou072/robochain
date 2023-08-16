@@ -66,3 +66,18 @@ messages = [
     HumanMessagePromptTemplate.from_template('{input}')
 ]
 MEMORY_CONVERSATION_TEMPLATE_2 = ChatPromptTemplate.from_messages(messages)
+
+# 构建用于 RQA 的 prompt template
+_DEFAULT_QA_TEMPLATE = _ROBOT_PROMPT_TEMPLATE + """
+Use the above context to answer the user's question and perform the user's command.
+-----------
+Current conversation:
+{context}
+Last line:
+Human: {question}
+You:"""
+
+QA_TEMPLATE = PromptTemplate(
+    input_variables=["context", "question"],
+    template=_DEFAULT_QA_TEMPLATE,
+)
