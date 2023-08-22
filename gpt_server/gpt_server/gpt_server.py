@@ -10,7 +10,7 @@ from gpt_interface.srv import GPT
 import os
 import sys
 sys.path.append(os.path.dirname(__file__))
-from demo_env import GraspingEnv
+import demo_env
 
 
 logging.basicConfig(level=logging.INFO)
@@ -66,15 +66,7 @@ class GPTServer(Node):
 
 def main(args=None):
     logging.info(f"Initializing Simulator...")
-    from roboimi.assets.robots.diana_grasp import DianaMed
-    env = GraspingEnv(
-        robot=DianaMed(),
-        renderer="viewer",
-        is_render=True,
-        control_freq=200,
-        is_interpolate=False,
-        is_pd=True
-    )
+    env = demo_env.make_env()
     env.reset()
     logging.info(f"Done.")
 

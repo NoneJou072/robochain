@@ -4,7 +4,7 @@ import roboimi.utils.KDL_utils.transform as T
 
 
 def primitive(func, checker=None):
-    """ primitive flag """
+    """ primitive flag, no practical effect. """
 
     def primitive_wrapper(*args, **kwargs):
         return func(*args, **kwargs)
@@ -93,3 +93,14 @@ class GraspingEnv(PosCtrlEnv):
         current_quat = T.mat2Quat(current_mat)
         return current_pos, current_quat
 
+def make_env():
+    from roboimi.assets.robots.diana_grasp import DianaMed
+    env = GraspingEnv(
+        robot=DianaMed(),
+        renderer="viewer",
+        is_render=True,
+        control_freq=200,
+        is_interpolate=False,
+        is_pd=True
+    )
+    return env

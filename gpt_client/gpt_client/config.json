@@ -1,3 +1,5 @@
 {
-    "OPENAI_API_KEY": "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"
+    "OPENAI_API_KEY": "<your key>",
+    "SERPAPI_API_KEY": "<your key>",
+    "PINECONE_API_KEY": "<your key>"
 }
