@@ -9,7 +9,7 @@
 [![LICENSE](https://img.shields.io/badge/License-MIT-informational)](https://nonejou072.github.io/)
 &nbsp;
 
-> 基于 ROS2 与 langchain 的仿真框架示例，用于使用大语言模型对机器人进行决策与规划。  
+> 基于 ROS2 与 langchain 的仿真框架示例（暂未包含机器人仿真环境，需要自行搭建），用于使用大语言模型对机器人进行决策与规划。  
 > [English](README-EN.md) | 中文文档
 
 ## 简介
@@ -36,6 +36,7 @@
 ROS2-foxy  
 Python-3.8+  
 langchain  
+<机器人仿真环境> - 使用例如 robosuite 等框架搭建自己的机器人仿真环境
 可选：  
 openai  
 pinecone
@@ -81,6 +82,9 @@ ros2 run gpt_server gpt_server
 # Terminal 2
 ros2 run gpt_client gpt_client
 ```
+
+### 3. 修改仿真环境
+在 `gpt_server/gpt_server/demo_env.py` 中的环境类修改为你自己本机上的机器人环境
 
 **示例命令**  
 部署成功后，可以尝试在客户端中输入以下示例内容，看看返回的内容。
