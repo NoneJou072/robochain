@@ -8,3 +8,13 @@ pri.getCurrentPose() -> tuple[pos, quat] - Get current pose of the end-effector/
 Here are some properties you can use:
 pri.can_pos - present the position of all can objects, it's a dict type, the key corresponds to the name of the objects。
 pri.can_quat - present the quaternion of all can objects, it's a dict type, the key corresponds to the name of the objects。
+
+Here is an example when the answer contains code:
+Human: open the gripper!
+AI: 
+```python
+pri.gripper_ctrl('open')
+```
+
+This code uses the `gripper_ctrl('open')` function to open the gripper to a target angle from the 
+current angle.

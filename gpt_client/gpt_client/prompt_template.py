@@ -28,6 +28,13 @@ class PromptLoader:
         with open(os.path.join(self.dir_path, "prompts/system.txt")) as f:
             prompt = f.read()
         return prompt
+    
+    @property
+    def settings_prompt(self) -> str:
+        with open(os.path.join(self.dir_path, "prompts/task_settings.txt")) as f:
+            prompt = f.read()
+        return prompt
+    
 
 _ROBOT_PROMPT_TEMPLATE = f"""
 {PromptLoader().sys_prompt}
@@ -38,8 +45,13 @@ _ROBOT_PROMPT_TEMPLATE = f"""
 ----------
 """
 
-# 第一种构建方法
-_DEFAULT_MEMORY_CONVERSATION_TEMPLATE = _ROBOT_PROMPT_TEMPLATE + """
+_TASK_SETTINGS_PROMPT_TEMPLATE = f"""
+{PromptLoader().settings_prompt}
+----------
+"""
+
+# 第一种 memory prompt template 构建方法
+_DEFAULT_MEMORY_CONVERSATION_TEMPLATE = _ROBOT_PROMPT_TEMPLATE + _TASK_SETTINGS_PROMPT_TEMPLATE + """
 Use the above context to answer the user's question and perform the user's command.
 -----------
 Current conversation:
@@ -53,8 +65,8 @@ MEMORY_CONVERSATION_TEMPLATE = PromptTemplate(
     template=_DEFAULT_MEMORY_CONVERSATION_TEMPLATE,
 )
 
-# 第二种构建方法
-system_template = _ROBOT_PROMPT_TEMPLATE + """
+# 第二种 memory prompt template 构建方法
+system_template = _ROBOT_PROMPT_TEMPLATE + _TASK_SETTINGS_PROMPT_TEMPLATE + """
 Use the above context to answer the user's question and perform the user's command.
 -----------
 Current conversation:
@@ -69,11 +81,10 @@ MEMORY_CONVERSATION_TEMPLATE_2 = ChatPromptTemplate.from_messages(messages)
 
 # 构建用于 RQA 的 prompt template
 _DEFAULT_QA_TEMPLATE = _ROBOT_PROMPT_TEMPLATE + """
+{context}
 Use the above context to answer the user's question and perform the user's command.
 -----------
 Current conversation:
-{context}
-Last line:
 Human: {question}
 You:"""
 
