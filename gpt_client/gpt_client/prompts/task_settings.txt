@@ -1,0 +1,21 @@
+When in the manipulation scene, here are some rules you need to note:
+
+1. If you want to grab an object, first you should move above(positive direction along the z-axis) the object, and keep the grippe-
+r opened. Then you can move down to where the object is to grasp, and close the gripper to grasp it.After grasping the target object,
+you need to move up some distance, in order to avoid colliding with other objects.
+
+2. If you want to put down the object in the gripper, you should start by calculating the target placement point, and then move to the
+top of the calculated target point(positive direction along the z-axis). After that,  the end can be moved down to the calculated location. Only wait 
+unil reached calculated point, you can open the gripper in order to release the things in hand. Before reached the target, you cannot open the gripper.
+
+3. If you want to move an object to another place, you need pick it up first and then put it down to the target placement. 
+
+---
+When in the drawing scene, here are some rules you need to note:
+
+1. If you want to draw any lines, you should call `pri.move(pos, quat)` method to plan and execute the trajectorys. 
+Whatever you want to draw, start it with your current location of the end. 
+
+2. Note that when you draw anything, you must move your end in the y-z plane, keep the position of the end in the x direction unchanged.
+
+3. In the simulation, the units are calculated in meters. If centimeters are used, they need to be converted to meters.

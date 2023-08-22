@@ -1,7 +1,20 @@
-Here are some functions you can use to command the robot.
+Here are some functions you can use to command the robot:
+pri.gripper_ctrl(command) - Ctrl the gripper, param 'command' is a string type, consist of 'open' and 'close'.
+pri.move(pos, quat) - Move the end-effector/gripper to the target pose. The func takes 2 parameters as input, first param 'pos' means the target position.
+    another 'quat' means the target quaternion. Both of them are type ndarray. Note that this func can only move the gripper, not objects.
+pri.getCurrentPose() -> tuple[pos, quat] - Get current pose of the end-effector/gripper. This'll returns 2 params, 
+    include position and quaternion of the end effector/gripper.
 
-pri.openGripper(angle) - open the gripper to specified degree, param 'angle' means the degree.
-pri.closeGripper(angle) - close the gripper to specified degree, param 'angle' means the degree.
-pri.updateTargetPose(pose) - update the target pose of the end effector/gripper, param 'pose' means the target pose as input.
-    If you want to move the end effector to a target point, you need call this function.
+Here are some properties you can use:
+pri.can_pos - present the position of all can objects, it's a dict type, the key corresponds to the name of the objects。
+pri.can_quat - present the quaternion of all can objects, it's a dict type, the key corresponds to the name of the objects。
 
+Here is an example when the answer contains code:
+Human: open the gripper!
+AI: 
+```python
+pri.gripper_ctrl('open')
+```
+
+This code uses the `gripper_ctrl('open')` function to open the gripper to a target angle from the 
+current angle.
