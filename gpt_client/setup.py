@@ -9,7 +9,7 @@ setup(
     version='0.0.0',
     packages=[package_name],
     package_data={
-        package_name:['*.json', 'prompts/*']
+        package_name:['*.json', '*.txt', 'prompts/*']
     
     },
     data_files=[

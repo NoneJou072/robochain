@@ -36,6 +36,9 @@ class PromptLoader:
         return prompt
     
 
+B_INST, E_INST = "[INST]", "[/INST]"
+B_SYS, E_SYS = "<<SYS>>\n", "\n<</SYS>>\n\n"
+
 _ROBOT_PROMPT_TEMPLATE = f"""
 {PromptLoader().sys_prompt}
 ----------
@@ -46,19 +49,21 @@ _ROBOT_PROMPT_TEMPLATE = f"""
 """
 
 _TASK_SETTINGS_PROMPT_TEMPLATE = f"""
+Here are some rules you need to note:
+
 {PromptLoader().settings_prompt}
 ----------
 """
 
 # 第一种 memory prompt template 构建方法
-_DEFAULT_MEMORY_CONVERSATION_TEMPLATE = _ROBOT_PROMPT_TEMPLATE + _TASK_SETTINGS_PROMPT_TEMPLATE + """
+_DEFAULT_MEMORY_CONVERSATION_TEMPLATE = B_INST + B_SYS + _ROBOT_PROMPT_TEMPLATE + _TASK_SETTINGS_PROMPT_TEMPLATE + E_SYS + """
 Use the above context to answer the user's question and perform the user's command.
 -----------
 Current conversation:
 {history}
 Last line:
 Human: {input}
-You:"""
+You:""" + E_INST
 
 MEMORY_CONVERSATION_TEMPLATE = PromptTemplate(
     input_variables=["history", "input"],
@@ -66,7 +71,7 @@ MEMORY_CONVERSATION_TEMPLATE = PromptTemplate(
 )
 
 # 第二种 memory prompt template 构建方法
-system_template = _ROBOT_PROMPT_TEMPLATE + _TASK_SETTINGS_PROMPT_TEMPLATE + """
+system_template = B_SYS + _ROBOT_PROMPT_TEMPLATE + _TASK_SETTINGS_PROMPT_TEMPLATE + E_SYS + """
 Use the above context to answer the user's question and perform the user's command.
 -----------
 Current conversation:
@@ -75,18 +80,16 @@ Current conversation:
 # 构建初始 messages 列表，这里可以理解为是 openai 传入的 messages 参数
 messages = [
     SystemMessagePromptTemplate.from_template(system_template),
-    HumanMessagePromptTemplate.from_template('{input}')
+    HumanMessagePromptTemplate.from_template(B_INST + '{input}' + E_INST)
 ]
 MEMORY_CONVERSATION_TEMPLATE_2 = ChatPromptTemplate.from_messages(messages)
 
 # 构建用于 RQA 的 prompt template
-_DEFAULT_QA_TEMPLATE = _ROBOT_PROMPT_TEMPLATE + """
-{context}
+_DEFAULT_QA_TEMPLATE = B_INST + B_SYS + _ROBOT_PROMPT_TEMPLATE + "{context}" + E_SYS + """
 Use the above context to answer the user's question and perform the user's command.
 -----------
-Current conversation:
 Human: {question}
-You:"""
+You:""" + E_INST
 
 QA_TEMPLATE = PromptTemplate(
     input_variables=["context", "question"],

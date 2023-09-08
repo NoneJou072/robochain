@@ -1,6 +1,7 @@
 import numpy as np
-from roboimi.envs.pos_ctrl_env import PosCtrlEnv
-import roboimi.utils.KDL_utils.transform as T
+# from roboimi.envs.pos_ctrl_env import PosCtrlEnv
+from robopal.envs.task_ctrl_env import PosCtrlEnv
+# import roboimi.utils.KDL_utils.transform as T
 
 
 def primitive(func, checker=None):
@@ -29,20 +30,17 @@ class GraspingEnv(PosCtrlEnv):
             is_interpolate=is_interpolate,
             is_pd=is_pd
         )
-        self.p_cart = 0.8
-        self.d_cart = 0.05
-        self.p_quat = 0.8
-        self.d_quat = 0.05
 
         self.action = None
 
-        can_list = ['red_block', 'white_block', 'green_block']
+        can_list = ['red_block', 'blue_block', 'green_block']
         self.can_pos, self.can_quat = self.getObjPose(can_list)
 
     def reset(self):
         super().reset()
-        init_pos, init_rot = self.kdl_solver.getEeCurrentPose(self.robot.single_arm.arm_qpos)
-        self.move(init_pos, self.can_quat['white_block'])
+        init_pos, init_rot = self.kdl_solver.fk(self.robot.single_arm.arm_qpos, rot_format='quat')
+        self.action = init_pos.copy()
+        self.move(init_pos, self.can_quat['blue_block'])
 
     def getObjPose(self, name_list):
         pos = {}
@@ -89,14 +87,14 @@ class GraspingEnv(PosCtrlEnv):
 
     @primitive
     def getCurrentPose(self):
-        current_pos, current_mat = self.kdl_solver.getEeCurrentPose(self.robot.single_arm.arm_qpos)
-        current_quat = T.mat2Quat(current_mat)
+        current_pos, current_quat = self.kdl_solver.fk(self.robot.single_arm.arm_qpos, rot_format='quat')
         return current_pos, current_quat
 
 def make_env():
-    from roboimi.assets.robots.diana_grasp import DianaMed
+    # from roboimi.assets.robots.diana_grasp import DianaMed
+    from robopal.assets.robots.diana_med import DianaGrasp
     env = GraspingEnv(
-        robot=DianaMed(),
+        robot=DianaGrasp(),
         renderer="viewer",
         is_render=True,
         control_freq=200,

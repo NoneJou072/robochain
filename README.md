@@ -50,10 +50,10 @@ pinecone
     ```
     git clone https://github.com/NoneJou072/ROS2-GPT-Interface.git
    ```
-3. 将仓库文件夹名称修改为 src, 然后安装相关依赖
+3. 安装相关依赖
     ```
     pip install -r src/requirements.txt
-   rosdep install --from-paths src --ignore-src -r -y
+    rosdep install --from-paths src --ignore-src -r -y
    ```
 4. 编译，检查报错
     ```
@@ -92,9 +92,6 @@ ros2 run gpt_client gpt_client
 场景一: 物体抓取
   * `pick up the red block`- 抓取红色方块
   * `put it down 10cm to the front of the white block.`- 把它放到白色方块前方10cm的位置
-
-场景二: 绘画
-  * `draw a circle with a radius of 10cm, the center is the current position of the end` - 以末端当前位置为圆心，画一个半径为10厘米的圆形
 
 **系统指令**  
 在聊天框中输入以下指令，可以执行对应的动作。
