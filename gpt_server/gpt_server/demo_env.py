@@ -1,6 +1,6 @@
 import numpy as np
 # from roboimi.envs.pos_ctrl_env import PosCtrlEnv
-from robopal.envs.task_ctrl_env import PosCtrlEnv
+from robopal.envs.task_ik_ctrl_env import PosCtrlEnv
 # import roboimi.utils.KDL_utils.transform as T
 
 
@@ -31,30 +31,24 @@ class GraspingEnv(PosCtrlEnv):
             is_pd=is_pd
         )
 
-        self.action = None
+        self.init_pos, self.init_rot = self.kdl_solver.fk(self.robot.single_arm.arm_qpos, rot_format='quaternion')
+        self.action = self.init_pos.copy()
 
-        can_list = ['red_block', 'blue_block', 'green_block']
-        self.can_pos, self.can_quat = self.getObjPose(can_list)
+    @primitive
+    def reset_robot(self):
+        self.move(self.init_pos, self.init_rot)
 
-    def reset(self):
-        super().reset()
-        init_pos, init_rot = self.kdl_solver.fk(self.robot.single_arm.arm_qpos, rot_format='quat')
-        self.action = init_pos.copy()
-        self.move(init_pos, self.can_quat['blue_block'])
-
-    def getObjPose(self, name_list):
-        pos = {}
-        quat = {}
-        for name in name_list:
-            pos[name] = self.mj_data.body(name).xpos.copy()
-            pos[name][2] -= 0.20
-            quat[name] = self.mj_data.body(name).xquat.copy()
+    @primitive
+    def get_obj_pose(self, obj_name):
+        pos = self.mj_data.body(obj_name).xpos.copy()
+        pos[2] -= 0.31
+        quat = self.mj_data.body(obj_name).xquat.copy()
         return pos, quat
 
     @primitive
     def move(self, pos, quat):
         def checkArriveState(state):
-            current_pos, current_quat = self.getCurrentPose()
+            current_pos, current_quat = self.get_current_pose()
             error = np.sum(np.abs(state[:3] - current_pos)) + np.sum(np.abs(state[3:] - current_quat))
             if error <= 0.01:
                 return True
@@ -67,6 +61,16 @@ class GraspingEnv(PosCtrlEnv):
                 self.render()
             if checkArriveState(self.action):
                 break
+    
+    @primitive
+    def grab(self, obj_name):
+        self.gripper_ctrl("open")
+        obj_pos, obj_quat = self.get_obj_pose(obj_name)
+        self.move(np.add(obj_pos, np.array([0, 0, 0.1])), obj_quat)
+        self.move(obj_pos, obj_quat)
+        self.gripper_ctrl("close")
+        end_pos, end_quat = self.get_current_pose()
+        self.move(np.add(end_pos, np.array([0, 0, 0.1])), end_quat)
 
     @primitive
     def gripper_ctrl(self, cmd: str):
@@ -77,18 +81,16 @@ class GraspingEnv(PosCtrlEnv):
         step = 0
         while True:
             step += 1
-            cur_pos, cur_quat = self.getCurrentPose()
-            action = np.concatenate((cur_pos, cur_quat), axis=0)
-            self.step(action)
+            self.step(self.action)
             if self.is_render:
                 self.render()
-            if step > 60:
+            if step > 80:
                 break
 
     @primitive
-    def getCurrentPose(self):
-        current_pos, current_quat = self.kdl_solver.fk(self.robot.single_arm.arm_qpos, rot_format='quat')
-        return current_pos, current_quat
+    def get_current_pose(self):
+        return self.kdl_solver.fk(self.robot.single_arm.arm_qpos, rot_format='quaternion')
+    
 
 def make_env():
     # from roboimi.assets.robots.diana_grasp import DianaMed

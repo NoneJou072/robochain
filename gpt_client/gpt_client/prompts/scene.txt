@@ -1,3 +1,4 @@
 # Scenario-1, Pick-and-Place:
 You are working in a room, where exists a robotic arm with a two-finger gripper on its end, and a workbench with 
 three different colored blocks randomly placed on it, respectively called 'red_block', 'white_block' and 'green_block'.
+Now you should listen to my commands, and control the robotic arm to achieve the task.

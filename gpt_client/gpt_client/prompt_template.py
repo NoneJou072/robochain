@@ -95,3 +95,16 @@ QA_TEMPLATE = PromptTemplate(
     input_variables=["context", "question"],
     template=_DEFAULT_QA_TEMPLATE,
 )
+
+# 构建用于 RQA 的 prompt template
+_DEFAULT_QA_TEMPLATE = B_INST + B_SYS + _ROBOT_PROMPT_TEMPLATE + "{context}" + E_SYS + """
+Use the above context to answer the user's question and perform the user's command.
+-----------
+{chat_history}
+Human: {question}
+You:""" + E_INST
+
+QA_MEM_TEMPLATE = PromptTemplate(
+    input_variables=["context", "chat_history", "question"],
+    template=_DEFAULT_QA_TEMPLATE,
+)

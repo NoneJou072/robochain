@@ -119,9 +119,9 @@ class GPTAssistant:
         if mode=='memory':
             # Initialize memory
             logging.info("Initialize memory...")
-            memory = ConversationBufferMemory()
+        memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True, output_key='answer')
 
-        elif mode=='retriever':
+        if mode=='retriever':
             logging.info("Initialize vector store...")
             embedding_model = eu.init_embedding_model()
             vector_store = eu.init_vector_store(embedding_model)
@@ -135,16 +135,23 @@ class GPTAssistant:
                 llm=llm,
                 verbose=verbose,
                 prompt=MEMORY_CONVERSATION_TEMPLATE,
-                memory=memory
+                memory=memory,
             )
         elif mode=='retriever':
             chain_type_kwargs = {"prompt": QA_TEMPLATE, "verbose":verbose}
-            self.conversation = RetrievalQA.from_chain_type(
+            # combine_docs_chain = StuffDocumentsChain(...)
+            # question_generator_chain = LLMChain(llm=llm, prompt=QA_TEMPLATE)
+            self.conversation = ConversationalRetrievalChain.from_llm(
+                # combine_docs_chain=combine_docs_chain,
                 llm=llm,
-                chain_type='stuff',
+                # chain_type='stuff',
                 retriever=vector_store.as_retriever(search_kwargs={'k': 3}),
-                chain_type_kwargs=chain_type_kwargs,
-                return_source_documents=True
+                # chain_type_kwargs=chain_type_kwargs,
+                # question_generator=question_generator_chain,
+                return_source_documents=True,
+                memory=memory,
+                verbose=verbose,
+                combine_docs_chain_kwargs={"prompt": QA_TEMPLATE},
             )
         logging.info(f"Done.")
 
@@ -158,8 +165,8 @@ class GPTAssistant:
         if self.mode=='memory':
             result = self.conversation.predict(input=question)
         elif self.mode=='retriever':
-            result_dict = self.conversation(question)
-            result = result_dict['result']
+            result = self.conversation(question)
+            # result = result_dict['result']
         return result
 
 

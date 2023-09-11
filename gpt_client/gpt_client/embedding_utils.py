@@ -25,8 +25,6 @@ def load_docs():
     documents = loader.load()
     text_splitter = CharacterTextSplitter(separator="---", chunk_size=500, chunk_overlap=20)
     docs = text_splitter.split_documents(documents)
-    for doc in docs:
-        print(doc)
     return docs
 
 

@@ -11,6 +11,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(__file__))
 import demo_env
+import numpy as np
 
 
 logging.basicConfig(level=logging.INFO)
@@ -79,13 +80,10 @@ def main(args=None):
     logging.info(f"Done.")
     
     while rclpy.ok():
-        if node.code is not None:
+        if isinstance(node.code, str):
             node.execute_python_code(env, node.code)
             node.code = None
 
-        """
-            <Write your main loop here.>
-        """
         env.step(env.action)
 
         if env.is_render:
