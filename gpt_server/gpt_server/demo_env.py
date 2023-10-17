@@ -1,7 +1,5 @@
 import numpy as np
-# from roboimi.envs.pos_ctrl_env import PosCtrlEnv
 from robopal.envs.task_ik_ctrl_env import PosCtrlEnv
-# import roboimi.utils.KDL_utils.transform as T
 
 
 def primitive(func, checker=None):
@@ -93,7 +91,6 @@ class GraspingEnv(PosCtrlEnv):
     
 
 def make_env():
-    # from roboimi.assets.robots.diana_grasp import DianaMed
     from robopal.assets.robots.diana_med import DianaGrasp
     env = GraspingEnv(
         robot=DianaGrasp(),

@@ -13,25 +13,25 @@ class PromptLoader:
 
     @property
     def pri_prompt(self) -> str:
-        with open(os.path.join(self.dir_path, "prompts/primitives.txt")) as f:
+        with open(os.path.join(self.dir_path, "primitives.txt")) as f:
             prompt = f.read()
         return prompt
 
     @property
     def sce_prompt(self) -> str:
-        with open(os.path.join(self.dir_path, "prompts/scene.txt")) as f:
+        with open(os.path.join(self.dir_path, "scene.txt")) as f:
             prompt = f.read()
         return prompt
 
     @property
     def sys_prompt(self) -> str:
-        with open(os.path.join(self.dir_path, "prompts/system.txt")) as f:
+        with open(os.path.join(self.dir_path, "system.txt")) as f:
             prompt = f.read()
         return prompt
     
     @property
     def settings_prompt(self) -> str:
-        with open(os.path.join(self.dir_path, "prompts/task_settings.txt")) as f:
+        with open(os.path.join(self.dir_path, "task_settings.txt")) as f:
             prompt = f.read()
         return prompt
     
@@ -107,4 +107,16 @@ You:""" + E_INST
 QA_MEM_TEMPLATE = PromptTemplate(
     input_variables=["context", "chat_history", "question"],
     template=_DEFAULT_QA_TEMPLATE,
+)
+
+# 构建用于 BAICHUAN 的 RQA prompt template
+_DEFAULT_QA_TEMPLATE_BAICHUAN = _ROBOT_PROMPT_TEMPLATE + "{context}" + """
+Use the above context to answer the user's question and perform the user's command.
+-----------
+Human: {question}
+You:"""
+
+QA_TEMPLATE_BAICHUAN = PromptTemplate(
+    input_variables=["context", "question"],
+    template=_DEFAULT_QA_TEMPLATE_BAICHUAN,
 )

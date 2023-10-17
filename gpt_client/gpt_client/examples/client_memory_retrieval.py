@@ -13,14 +13,13 @@ from gpt_interface.srv import GPT
 from langchain import HuggingFacePipeline
 from langchain.memory import ConversationBufferMemory
 
-from langchain.chains import ConversationChain, ConversationalRetrievalChain, LLMChain, StuffDocumentsChain
-from langchain.chains import RetrievalQA
+from langchain.chains import ConversationalRetrievalChain
 
 from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig, AutoConfig
 from transformers import pipeline
 
-from gpt_client.prompt_template import QA_TEMPLATE, MEMORY_CONVERSATION_TEMPLATE_2, MEMORY_CONVERSATION_TEMPLATE
-import gpt_client.embedding_utils as eu
+from gpt_client.gpt_client.prompts.prompt_template import QA_TEMPLATE, MEMORY_CONVERSATION_TEMPLATE_2, MEMORY_CONVERSATION_TEMPLATE
+import gpt_client.gpt_client.commons.embedding_utils as eu
 
 logging.basicConfig(level=logging.INFO)
 
@@ -61,10 +60,7 @@ def set_global_configs():
 class GPTAssistant:
     """ Load ChatGPT config and your custom pre-prompts. """
 
-    def __init__(self, verbose=False, mode='memory') -> None:
-        
-        self.mode = mode
-
+    def __init__(self, verbose=False) -> None:
         logging.info("Loading keys...")
         set_global_configs()
         logging.info(f"Done.")
@@ -72,7 +68,6 @@ class GPTAssistant:
         logging.info("Initialize langchain...")
         
         # Initialize chat model
-        # model_id = 'meta-llama/Llama-2-7b-chat-hf'
         model_id = 'codellama/CodeLlama-13b-Instruct-hf'
         hf_auth = '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'  # Huggingface access token
 
@@ -99,8 +94,6 @@ class GPTAssistant:
             torch_dtype=torch.bfloat16,
             device_map='auto',
             max_length=2048,
-            # temperature=0.1,  # only used in sample-based generation modes.
-            # top_p=0.95,
             repetition_penalty=1.15,
             pad_token_id=2,
             tokenizer=tokenizer,
@@ -108,65 +101,33 @@ class GPTAssistant:
         )
 
         logging.info("Initialize LLM...")
-        llm = HuggingFacePipeline(
-            pipeline=pipe,
-            # model_kwargs={'temperature':0.1}
-        )
+        llm = HuggingFacePipeline(pipeline=pipe)
         logging.info(f"Done.")
 
-        # Initialize chat tools
         logging.info("Initialize tools...")
-        if mode=='memory':
-            # Initialize memory
-            logging.info("Initialize memory...")
         memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True, output_key='answer')
 
-        if mode=='retriever':
-            logging.info("Initialize vector store...")
-            embedding_model = eu.init_embedding_model()
-            vector_store = eu.init_vector_store(embedding_model)
-        else:
-            raise ValueError('Invalid mode.')
+        logging.info("Initialize vector store...")
+        embedding_model = eu.init_embedding_model()
+        vector_store = eu.init_vector_store(embedding_model)
         logging.info(f"Done.")
 
         logging.info("Initialize chain...")
-        if mode=='memory':
-            self.conversation = ConversationChain(
-                llm=llm,
-                verbose=verbose,
-                prompt=MEMORY_CONVERSATION_TEMPLATE,
-                memory=memory,
-            )
-        elif mode=='retriever':
-            chain_type_kwargs = {"prompt": QA_TEMPLATE, "verbose":verbose}
-            # combine_docs_chain = StuffDocumentsChain(...)
-            # question_generator_chain = LLMChain(llm=llm, prompt=QA_TEMPLATE)
-            self.conversation = ConversationalRetrievalChain.from_llm(
-                # combine_docs_chain=combine_docs_chain,
-                llm=llm,
-                # chain_type='stuff',
-                retriever=vector_store.as_retriever(search_kwargs={'k': 3}),
-                # chain_type_kwargs=chain_type_kwargs,
-                # question_generator=question_generator_chain,
-                return_source_documents=True,
-                memory=memory,
-                verbose=verbose,
-                combine_docs_chain_kwargs={"prompt": QA_TEMPLATE},
-            )
+        # question_generator_chain = LLMChain(llm=llm, prompt=QA_TEMPLATE)
+        self.conversation = ConversationalRetrievalChain.from_llm(
+            llm=llm,
+            retriever=vector_store.as_retriever(search_kwargs={'k': 3}),
+            # question_generator=question_generator_chain,
+            return_source_documents=True,
+            memory=memory,
+            verbose=verbose,
+            combine_docs_chain_kwargs={"prompt": QA_TEMPLATE},
+        )
         logging.info(f"Done.")
-
-        # os.system("clear")
-        with open(os.path.join(os.path.dirname(__file__), 'banner.txt'), 'r') as f:
-            banner = f.read()
-            streaming_print(banner, color=colors.YELLOW)
-        streaming_print("I am ready to help you with your questions and commands.\n", color=colors.BLUE)
     
     def ask(self, question):
-        if self.mode=='memory':
-            result = self.conversation.predict(input=question)
-        elif self.mode=='retriever':
-            result = self.conversation(question)
-            # result = result_dict['result']
+        result = self.conversation(question)
+        # result = result_dict['result']
         return result
 
 
@@ -178,7 +139,7 @@ class GPTClient(Node):
         mode(str): using 'retriever'/'memory' to build the chain.                                                                                                                                     
         verbose:(bool): whether to print the whole context on the terminal.
     """
-    def __init__(self, node_name: str, is_debug: bool=False, mode='memory', verbose=False) -> None:
+    def __init__(self, node_name: str, is_debug: bool=False, verbose=False) -> None:
         super().__init__(node_name)
         self.get_logger().info("%s already." % node_name)
         self.gpt_client = self.create_client(GPT, "gpt_service")
@@ -190,7 +151,6 @@ class GPTClient(Node):
 
         self.gpt = GPTAssistant(
             verbose=verbose,
-            mode=mode
         )
 
     def result_callback(self, result):
@@ -212,7 +172,6 @@ def main(args=None):
     gpt_node = GPTClient(
         "gpt_client",
         is_debug=True,
-        mode='retriever',  # 'retriever' or 'memory'
         verbose=True
     )
     

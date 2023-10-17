@@ -1,4 +1,4 @@
-<h1 align="center">欢迎使用 Langchain-Robotic 👋</h1>  
+<h1 align="center">欢迎使用 robochain 👋</h1>  
 
 --- 
 
@@ -9,14 +9,12 @@
 [![LICENSE](https://img.shields.io/badge/License-MIT-informational)](https://nonejou072.github.io/)
 &nbsp;
 
-> 基于 ROS2 与 langchain 的仿真框架示例（暂未包含机器人仿真环境，需要自行搭建），用于使用大语言模型对机器人进行决策与规划。  
+> 结合 ROS2 与 langchain 的仿真框架，能够通过使用大语言模型对机器人进行控制。  
 > [English](README-EN.md) | 中文文档
 
 ## 简介
 
----
-
-为了方便使用大语言模型进行机器人的开发，本人结合了 langchain 与 ROS2，并基于提示工程对提示词内容进行设计与优化。
+为了使用大语言模型对机器人下达指令，让机器人理解，自行生成任务代码并执行，一种方法是将大语言模型与ROS2通信框架结合。本项目使用了 langchain 与 ROS2，基于提示工程对机器人操作方面的提示词内容进行了设计。
 具体地，系统的运行流程为：
 1. 初始化 langchain（包括 LLM、chain、tools）、ros、仿真环境
 2. 在客户端内输入一个请求，发送到 chain 内
@@ -26,20 +24,19 @@
 6. 在服务端内提取出回答内包含的可执行代码片段，并执行
 7. 执行结果作为响应回传到客户端中
 
-在提供的示例中，使用的大语言模型为 OpenAI 的 gpt-3.5。  
+针对在线部署和离线部署，分别提供了不同的选择：
+1. Large Language Model: gpt-3.5 / codellama(from Huggingface)
+2. Embedding Model:  OpenAI-Embedding-Model / MiniLM-L6(from Huggingface)
+3. Vector Store: Pinecone / Chroma
 
 ## 部署
 
---- 
 **环境准备：**  
 >Ubuntu-20.04+  
 ROS2-foxy  
 Python-3.8+  
 langchain  
-<机器人仿真环境> - 使用例如 robosuite 等框架搭建自己的机器人仿真环境
-可选：  
-openai  
-pinecone
+robopal
 
 **部署流程：**
 1. 新建 ros 工作空间并进入空间中
@@ -48,14 +45,15 @@ pinecone
     ```
 2. 克隆本仓库到工作空间
     ```
-    git clone https://github.com/NoneJou072/ROS2-GPT-Interface.git
+    git clone https://github.com/NoneJou072/robochain.git
+    (optional) mv robochain src
    ```
 3. 安装相关依赖
     ```
     pip install -r src/requirements.txt
     rosdep install --from-paths src --ignore-src -r -y
    ```
-4. 编译，检查报错
+4. 编译，排查报错
     ```
    colcon build --symlink-install
    ```
@@ -63,8 +61,8 @@ pinecone
 ## 使用
 
 ---
-### 1. 添加密钥
-更改 `gpt_client/gpt_client/config.json` 文件内的密钥
+### 0. (可选)添加密钥
+更改 `gpt_client/gpt_client/commons/config.json` 文件内的密钥
    ```
    "OPENAI_API_KEY": "<Your openai-key>"
    "PINECONE_API_KEY": "<Your pinecone-key>"
@@ -72,7 +70,7 @@ pinecone
 [pinecone](https://www.pinecone.io/) 是一个向量数据库，如果有需要请自行注册
 
 ### 2. 运行
-分别在两个终端中启动服务端和客户端，等待客户端初始化完成后，
+分别在两个终端中启动 llm 服务端和 robot 客户端，等待初始化完成后，
 我们可以在终端内输入请求或问题，等待服务端执行或回应。
 ```bash
 # Terminal 1
@@ -124,8 +122,6 @@ ros2 run gpt_client gpt_client
 根据这些提示词，LLM 能识别我们的指令，并在服务端中转换成可以被执行的 Python 代码进行执行。我们可以修改或添加提示词，让机器人能够根据自然语言的输入执行相应的任务。
 
 ## License
-
----
 
 ```
 Copyright (c) 2023 Round Dolphiiin
