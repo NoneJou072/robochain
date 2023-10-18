@@ -26,7 +26,8 @@ setup(
     entry_points={
         'console_scripts': [
             "gpt_client = gpt_client.examples.client_retrieval:main",
-            "gpt_baichuan = gpt_client.examples.client_retrieval_baichuan:main"
+            "gpt_baichuan = gpt_client.examples.client_retrieval_baichuan:main",
+            "gpt_mistral = gpt_client.examples.client_retrieval_mistral:main"
         ],
     },
 )

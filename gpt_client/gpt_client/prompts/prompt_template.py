@@ -120,3 +120,15 @@ QA_TEMPLATE_BAICHUAN = PromptTemplate(
     input_variables=["context", "question"],
     template=_DEFAULT_QA_TEMPLATE_BAICHUAN,
 )
+
+# 构建用于 MISTRAL 的 QA prompt template
+_DEFAULT_QA_TEMPLATE_BAICHUAN = B_INST + _ROBOT_PROMPT_TEMPLATE + "{context}" + """
+Use the above context to answer the user's question and perform the user's command.
+-----------
+Human: {question}
+You:""" + E_INST
+
+QA_TEMPLATE_BAICHUAN = PromptTemplate(
+    input_variables=["context", "question"],
+    template=_DEFAULT_QA_TEMPLATE_BAICHUAN,
+)
