@@ -1,5 +1,5 @@
 import numpy as np
-from robopal.envs.task_ik_ctrl_env import PosCtrlEnv
+from robopal.demos.demo_multi_cubes import MultiCubes
 
 
 def primitive(func, checker=None):
@@ -11,9 +11,8 @@ def primitive(func, checker=None):
     return primitive_wrapper
 
 
-class GraspingEnv(PosCtrlEnv):
+class GraspingEnv(MultiCubes):
     def __init__(self,
-                 robot=None,
                  is_render=True,
                  renderer="viewer",
                  control_freq=20,
@@ -21,7 +20,6 @@ class GraspingEnv(PosCtrlEnv):
                  is_pd=True,
                  ):
         super().__init__(
-            robot=robot,
             is_render=is_render,
             renderer=renderer,
             control_freq=control_freq,
@@ -30,7 +28,7 @@ class GraspingEnv(PosCtrlEnv):
         )
 
         self.init_pos, self.init_rot = self.kdl_solver.fk(self.robot.single_arm.arm_qpos, rot_format='quaternion')
-        self.action = self.init_pos.copy()
+        self.action = np.concatenate((self.init_pos, np.zeros(1)), axis=0)
 
     @primitive
     def reset_robot(self):
@@ -59,7 +57,7 @@ class GraspingEnv(PosCtrlEnv):
                 self.render()
             if checkArriveState(self.action):
                 break
-    
+
     @primitive
     def grab(self, obj_name):
         self.gripper_ctrl("open")
@@ -88,12 +86,10 @@ class GraspingEnv(PosCtrlEnv):
     @primitive
     def get_current_pose(self):
         return self.kdl_solver.fk(self.robot.single_arm.arm_qpos, rot_format='quaternion')
-    
+
 
 def make_env():
-    from robopal.assets.robots.diana_med import DianaGrasp
     env = GraspingEnv(
-        robot=DianaGrasp(),
         renderer="viewer",
         is_render=True,
         control_freq=200,
