@@ -75,7 +75,7 @@ def execute_python_code(pri, code):
     print("\033[32m" + "Done!\n" + "\033[m")
 
 
-def main_tcp(args=None):
+def main(args=None):
     logging.info(f"Initializing Simulator...")
     env = GraspingEnv()
     env.reset()
@@ -123,4 +123,4 @@ def main_tcp(args=None):
 
 
 if __name__ == "__main__":
-    main_tcp()
+    main()

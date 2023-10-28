@@ -72,15 +72,6 @@ class GPTServer(Node):
         print("\033[32m" + "Done!\n" + "\033[m")
 
 
-def main_tcp(args=None):
-    logging.info(f"Initializing Simulator...")
-    env = demo_env.make_env()
-    env.reset()
-    logging.info(f"Done.")
-
-    logging.info(f"Initializing TCP...")
-    HOST = ''
-
 def main(args=None):
     logging.info(f"Initializing Simulator...")
     env = demo_env.make_env()
@@ -112,4 +103,4 @@ def main(args=None):
     rclpy.shutdown()
 
 if __name__ == "__main__":
-    main_tcp()
+    main()

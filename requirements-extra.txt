@@ -1,0 +1,6 @@
+# required for openai's llms
+openai
+sentence-transformers
+
+# required for robotic simulation
+robopal

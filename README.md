@@ -61,6 +61,11 @@ robopal(optional but recommended)
    colcon build --symlink-install
    ```
 **使用 TCP 进行通讯的部署流程：**
+
+0. (建议)新建 conda 环境
+    ```
+    conda create -n robochain python=3.11
+    ```
 1. 克隆本仓库到本地
     ```
     git clone https://github.com/NoneJou072/robochain.git
