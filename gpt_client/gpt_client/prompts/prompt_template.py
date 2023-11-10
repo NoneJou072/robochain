@@ -41,11 +41,11 @@ B_SYS, E_SYS = "<<SYS>>\n", "\n<</SYS>>\n\n"
 
 _ROBOT_PROMPT_TEMPLATE = f"""
 {PromptLoader().sys_prompt}
-----------
+
 {PromptLoader().sce_prompt}
-----------
+
 {PromptLoader().pri_prompt}
-----------
+
 """
 
 _TASK_SETTINGS_PROMPT_TEMPLATE = f"""
@@ -122,13 +122,23 @@ QA_TEMPLATE_BAICHUAN = PromptTemplate(
 )
 
 # 构建用于 MISTRAL 的 QA prompt template
-_DEFAULT_QA_TEMPLATE_BAICHUAN = B_INST + _ROBOT_PROMPT_TEMPLATE + "{context}" + """
+_DEFAULT_QA_TEMPLATE_MISTRAL = B_INST + _ROBOT_PROMPT_TEMPLATE + "{context}" + """
 Use the above context to answer the user's question and perform the user's command.
 -----------
 Human: {question}
 You:""" + E_INST
 
-QA_TEMPLATE_BAICHUAN = PromptTemplate(
+QA_TEMPLATE_MISTRAL = PromptTemplate(
     input_variables=["context", "question"],
-    template=_DEFAULT_QA_TEMPLATE_BAICHUAN,
+    template=_DEFAULT_QA_TEMPLATE_MISTRAL,
+)
+
+# 构建用于 Zephyr 的 QA prompt template
+_DEFAULT_QA_TEMPLATE_ZEPHYR = '<|system|>\n' + "{context}" + """
+Use the above context to answer the user's question and perform the user's command.
+""" + "\n<|user|>\n{question}""" + """\n<|assistant|>"""
+
+QA_TEMPLATE_ZEPHYR = PromptTemplate(
+    input_variables=["context", "question"],
+    template=_DEFAULT_QA_TEMPLATE_ZEPHYR,
 )

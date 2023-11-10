@@ -1,5 +1,6 @@
 import os
 import time
+import json
 
 
 def stream_string_generate(input_string):
@@ -27,3 +28,11 @@ class colors:
     GREEN = "\033[32m"
     YELLOW = "\033[33m"
     BLUE = "\033[34m"
+
+
+def set_global_configs(cfg_file):
+    """ Load your app's keys and add to an enviroment variable. """
+    with open(cfg_file, "r") as f:
+        keys: dict = json.load(f)
+        for key, value in keys.items():
+            os.environ[key] = value

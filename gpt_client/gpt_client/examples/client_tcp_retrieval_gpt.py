@@ -1,5 +1,6 @@
 import argparse
 import os
+import sys
 import json
 import logging
 import socket
@@ -7,6 +8,7 @@ import socket
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
 from gpt_client.gpt_client.prompts.prompt_template import QA_TEMPLATE_BAICHUAN
 import gpt_client.gpt_client.commons.embedding_utils as eu
 from gpt_client.gpt_client.commons.utils import colors, streaming_print_banner
@@ -24,7 +26,7 @@ def set_global_configs():
     with open(args.keys_list, "r") as f:
         keys = json.load(f)
     os.environ["OPENAI_API_KEY"] = keys["OPENAI_API_KEY"]
-    os.environ["OPENAI_API_BASE"] = keys["OPENAI_API_BASE"]
+    # os.environ["OPENAI_API_BASE"] = keys["OPENAI_API_BASE"]
     os.environ["PINECONE_API_KEY"] = keys["PINECONE_API_KEY"]
 
 

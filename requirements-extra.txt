@@ -4,3 +4,6 @@ sentence-transformers
 
 # required for robotic simulation
 robopal
+
+# required for huggingface models
+accelerate
