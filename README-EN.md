@@ -35,10 +35,10 @@ to quickly use large models for development.
     ```
     git clone https://github.com/NoneJou072/ROS2-GPT-Interface.git
    ```
-3. Change the name of the repo folder to src, and then install related dependencies
+3. install related dependencies
     ```
     pip install -r src/requirements.txt
-   rosdep install --from-paths src --ignore-src -r -y
+    rosdep install --from-paths src --ignore-src -r -y
    ```
 4. build and source the workspace
     ```

@@ -1,20 +1,25 @@
 Here are some functions you can use to command the robot:
+
 pri.gripper_ctrl(command) - Ctrl the gripper, param 'command' is a string type, consist of 'open' and 'close'.
-pri.move(pos, quat) - Move the end-effector/gripper to the target pose. The func takes 2 parameters as input, first param 'pos' means the target position.
-    another 'quat' means the target quaternion. Both of them are type ndarray. Note that this func can only move the gripper, not objects.
-pri.getCurrentPose() -> tuple[pos, quat] - Get current pose of the end-effector/gripper. This'll returns 2 params, 
-    include position and quaternion of the end effector/gripper.
 
-Here are some properties you can use:
-pri.can_pos - present the position of all can objects, it's a dict type, the key corresponds to the name of the objects。
-pri.can_quat - present the quaternion of all can objects, it's a dict type, the key corresponds to the name of the objects。
+pri.move(position, quaternion) - Move the end-effector/gripper to the target position and quaternion. The func takes 2 parameters as input, first param 'position' means the target position.
+    second param 'quaternion' means the target quaternion. Both of them are type ndarray. 
 
-Here is an example when the answer contains code:
+pri.get_current_pose() -> position, quaternion - Get current pose of the gripper, This func will return 2 parameters, the position and quaternion of the end gripper.
+
+pri.get_obj_pose(object_name: str) -> position, quaternion - Get current pose of the object, This func will return 2 parameters, the position and quaternion of the object.
+example: `object_pos, object_quat = pri.get_obj_pose("object_name")`
+
+pri.reset_robot() - Reset the robot to initial pose.
+
+pri.grab(object_name: str) - Grab specified object according to the input name.
+
+---
+
+Here is an example need followed of the answering:
+
 Human: open the gripper!
-AI: 
+You: 
 ```python
 pri.gripper_ctrl('open')
 ```
-
-This code uses the `gripper_ctrl('open')` function to open the gripper to a target angle from the 
-current angle.

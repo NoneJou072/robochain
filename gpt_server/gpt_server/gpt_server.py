@@ -1,19 +1,27 @@
+import os
+import sys
 import re
 import time
 import logging
+logging.basicConfig(level=logging.INFO)
 
-import rclpy
-from rclpy.node import Node
-from rclpy.executors import SingleThreadedExecutor
-from gpt_interface.srv import GPT
+import numpy as np
 
-import os
-import sys
+COMMUNICATION_MODE = "ROS2"  # "ROS2" or "TCP"
+if COMMUNICATION_MODE == "ROS2":
+    try:
+        import rclpy
+        from rclpy.node import Node
+        from rclpy.executors import SingleThreadedExecutor
+        from gpt_interface.srv import GPT
+    except ImportError:
+        logging.warning("ROS2 is not installed, please install ROS2 first.")
+else:
+    import socket
+
 sys.path.append(os.path.dirname(__file__))
 import demo_env
 
-
-logging.basicConfig(level=logging.INFO)
 
 class GPTServer(Node):
     """ GPT Server Node Class. """
@@ -65,11 +73,6 @@ class GPTServer(Node):
 
 
 def main(args=None):
-    logging.info(f"Initializing Simulator...")
-    env = demo_env.make_env()
-    env.reset()
-    logging.info(f"Done.")
-
     logging.info(f"Initializing ROS...")
     rclpy.init(args=args)
     node = GPTServer("gpt_server")
@@ -78,14 +81,16 @@ def main(args=None):
     executor.add_node(node)
     logging.info(f"Done.")
     
+    logging.info(f"Initializing Simulator...")
+    env = demo_env.make_env()
+    env.reset()
+    logging.info(f"Done.")
+
     while rclpy.ok():
-        if node.code is not None:
+        if isinstance(node.code, str):
             node.execute_python_code(env, node.code)
             node.code = None
 
-        """
-            <Write your main loop here.>
-        """
         env.step(env.action)
 
         if env.is_render:
@@ -96,3 +101,6 @@ def main(args=None):
 
     node.destroy_node()
     rclpy.shutdown()
+
+if __name__ == "__main__":
+    main()

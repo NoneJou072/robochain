@@ -1,5 +1,4 @@
 {
     "OPENAI_API_KEY": "<your key>",
-    "SERPAPI_API_KEY": "<your key>",
     "PINECONE_API_KEY": "<your key>"
 }
