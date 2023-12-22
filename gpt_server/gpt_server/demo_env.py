@@ -1,6 +1,6 @@
 import numpy as np
-from robopal.demos.demo_multi_cubes import MultiCubes
-
+from robopal.envs.task_ik_ctrl_env import PosCtrlEnv
+from robopal.robots.diana_med import DianaGraspMultiObjs
 
 def primitive(func, checker=None):
     """ primitive flag, no practical effect. """
@@ -11,23 +11,23 @@ def primitive(func, checker=None):
     return primitive_wrapper
 
 
-class GraspingEnv(MultiCubes):
+class GraspingEnv(PosCtrlEnv):
     def __init__(self,
-                 is_render=True,
-                 renderer="viewer",
+                 robot=DianaGraspMultiObjs(),
+                 render_mode="human",
                  control_freq=20,
-                 is_interpolate=True,
+                 is_interpolate=False,
                  is_pd=True,
                  ):
         super().__init__(
-            is_render=is_render,
-            renderer=renderer,
+            robot=robot,
+            render_mode=render_mode,
             control_freq=control_freq,
             is_interpolate=is_interpolate,
             is_pd=is_pd
         )
 
-        self.init_pos, self.init_rot = self.kdl_solver.fk(self.robot.single_arm.arm_qpos, rot_format='quaternion')
+        self.init_pos, self.init_rot = self.kdl_solver.fk(self.robot.arm_qpos, rot_format='quaternion')
         self.action = np.concatenate((self.init_pos, np.zeros(1)), axis=0)
 
     @primitive
@@ -53,7 +53,7 @@ class GraspingEnv(MultiCubes):
         while True:
             self.action = np.concatenate((pos, quat), axis=0)
             self.step(self.action)
-            if self.is_render:
+            if self.render_mode == "human":
                 self.render()
             if checkArriveState(self.action):
                 break
@@ -78,7 +78,7 @@ class GraspingEnv(MultiCubes):
         while True:
             step += 1
             self.step(self.action)
-            if self.is_render:
+            if self.render_mode == "human":
                 self.render()
             if step > 80:
                 break
@@ -90,8 +90,7 @@ class GraspingEnv(MultiCubes):
 
 def make_env():
     env = GraspingEnv(
-        renderer="viewer",
-        is_render=True,
+        render_mode="human",
         control_freq=200,
         is_interpolate=False,
         is_pd=True

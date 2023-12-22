@@ -73,17 +73,17 @@ class GPTServer(Node):
 
 
 def main(args=None):
-    logging.info(f"Initializing Simulator...")
-    env = demo_env.make_env()
-    env.reset()
-    logging.info(f"Done.")
-
     logging.info(f"Initializing ROS...")
     rclpy.init(args=args)
     node = GPTServer("gpt_server")
     node.get_logger().info("Gpt server has init.")
     executor = SingleThreadedExecutor()
     executor.add_node(node)
+    logging.info(f"Done.")
+    
+    logging.info(f"Initializing Simulator...")
+    env = demo_env.make_env()
+    env.reset()
     logging.info(f"Done.")
 
     while rclpy.ok():

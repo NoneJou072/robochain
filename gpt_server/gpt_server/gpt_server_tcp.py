@@ -76,10 +76,6 @@ def execute_python_code(pri, code):
 
 
 def main(args=None):
-    logging.info(f"Initializing Simulator...")
-    env = GraspingEnv()
-    env.reset()
-    logging.info(f"Done.")
 
     logging.info(f"Initializing TCP...")
     HOST = ''
@@ -87,6 +83,11 @@ def main(args=None):
     ss.bind((HOST, 5001))
     ss.listen(1)
     ss.setblocking(0)  # 设置为非阻塞
+    logging.info(f"Done.")
+
+    logging.info(f"Initializing Simulator...")
+    env = GraspingEnv()
+    env.reset()
     logging.info(f"Done.")
 
     while True:
