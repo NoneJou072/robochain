@@ -48,45 +48,24 @@ class GPTAssistant:
             generation_config = None
         
         tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True, cache_dir='../cache/')
-        # response, history = model.chat(tokenizer, "你好", history=[])
-        # print(response)
+
         pipe = pipeline(
             "text-generation",
             model=model,
-            # torch_dtype=torch.bfloat16,
-            # device_map='auto',
             max_length=2048,
             tokenizer=tokenizer,
             generation_config=generation_config,
             model_kwargs={'temperature': 0.0}
         )
-        llm = HuggingFacePipeline(pipeline=pipe)
-        print(llm('hello'))
-        # logging.info(f"Done.")
+        self.llm = HuggingFacePipeline(pipeline=pipe)
+        logging.info(f"Done.")
 
-        # logging.info("Initialize tools...")
-        # embedding_model = eu.init_embedding_model()
-        # vector_store = eu.init_vector_store(embedding_model)
-        # logging.info(f"Done.")
+        os.system("clear")
+        streaming_print_banner()
 
-        # logging.info("Initialize chain...")
-        # chain_type_kwargs = {"prompt": QA_TEMPLATE_ZEPHYR, "verbose": verbose}
-        # self.conversation = RetrievalQA.from_chain_type(
-        #     llm=llm,
-        #     chain_type='stuff',
-        #     retriever=vector_store.as_retriever(search_kwargs={'k': 3}),
-        #     chain_type_kwargs=chain_type_kwargs,
-        #     return_source_documents=True
-        # )
-        # logging.info(f"Done.")
-
-        # os.system("clear")
-        # streaming_print_banner()
-
-    # def ask(self, question):
-    #     result_dict = self.conversation(question)
-    #     result = result_dict['result']
-    #     return result
+    def ask(self, question):
+        result = self.llm(question)
+        return result
 
 
 def main(args=None):
