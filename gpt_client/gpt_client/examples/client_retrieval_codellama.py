@@ -46,9 +46,7 @@ class GPTAssistant:
         logging.info("Initialize langchain...")
         
         # Initialize chat model
-        # model_id = 'meta-llama/Llama-2-7b-chat-hf'
         model_id = 'codellama/CodeLlama-13b-Instruct-hf'
-        hf_auth = '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'  # Huggingface access token
 
         model = AutoModelForCausalLM.from_pretrained(
             model_id,
@@ -56,11 +54,10 @@ class GPTAssistant:
             load_in_8bit=True,
             torch_dtype=torch.float16,
             device_map='auto',
-            use_auth_token=hf_auth
         )
 
         logging.info("Initialize pipeline...")
-        generation_config = GenerationConfig.from_pretrained(model_id, use_auth_token=hf_auth)
+        generation_config = GenerationConfig.from_pretrained(model_id)
         tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=False, trust_remote_code=True)
         pipe = pipeline(
             "text-generation",
