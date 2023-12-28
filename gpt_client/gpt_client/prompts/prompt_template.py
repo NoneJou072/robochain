@@ -1,6 +1,10 @@
 import os
+
+try:
+    from langchain.prompts.chat import PromptTemplate
+except:
+    from langchain.prompts import PromptTemplate
 from langchain.prompts.chat import (
-    PromptTemplate,
     ChatPromptTemplate,
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate
