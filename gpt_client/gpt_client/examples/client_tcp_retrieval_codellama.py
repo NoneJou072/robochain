@@ -88,7 +88,7 @@ class GPTAssistant:
 
 
 def main(args=None):
-    IS_DUBUG = True
+    IS_DUBUG = False
     if not IS_DUBUG:
         HOST = 'localhost'
         PORT = 2542

@@ -70,7 +70,7 @@ class GPTAssistant:
 
 
 def main(args=None):
-    IS_DUBUG = True
+    IS_DUBUG = False
     gpt = GPTAssistant(
         verbose=True,
     )
@@ -92,7 +92,7 @@ def main(args=None):
         result = gpt.ask(question)  # Ask a question
         print(colors.GREEN + "Assistant🤖> " + colors.ENDC + f"{result}")
         if not IS_DUBUG:
-            s.sendall(question.encode())
+            s.sendall(result.encode())
 
 
 if __name__ == '__main__':
