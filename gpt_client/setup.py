@@ -9,8 +9,7 @@ setup(
     version='0.0.0',
     packages=[package_name],
     package_data={
-        package_name:['*.json', '*.txt', 'prompts/*']
-    
+        package_name:['prompts/*', 'agents/*', 'commons/*', 'examples/*']
     },
     data_files=[
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
@@ -25,9 +24,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            "gpt_client = gpt_client.examples.client_retrieval:main",
-            "gpt_baichuan = gpt_client.examples.client_retrieval_baichuan:main",
-            "gpt_mistral = gpt_client.examples.client_retrieval_mistral:main"
+            "gpt_client = gpt_client.examples.client_retrieval_codellama:main",
         ],
     },
 )
