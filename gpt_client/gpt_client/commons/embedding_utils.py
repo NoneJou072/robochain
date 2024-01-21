@@ -1,20 +1,20 @@
 import os
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.document_loaders import TextLoader
+from langchain_community.document_loaders import TextLoader
 
 EMBEDDING_MODEL = 1  # O for OpenAIEmbeddings and 1 for HuggingFaceEmbeddings
 if EMBEDDING_MODEL == 0:
-    from langchain.embeddings.openai import OpenAIEmbeddings
+    from langchain_community.embeddings.openai import OpenAIEmbeddings
 elif EMBEDDING_MODEL == 1:
-    from langchain.embeddings import HuggingFaceEmbeddings
+    from langchain_community.embeddings import HuggingFaceEmbeddings
 
 VECTOR_STORE = 1  # 0 for Pinecone and 1 for Chroma
 if VECTOR_STORE == 0:
     import pinecone
-    from langchain.vectorstores import Pinecone
+    from langchain_community.vectorstores import Pinecone
 elif VECTOR_STORE == 1:
     # make sure you have chromadb on your local machine `pip install chromadb`
-    from langchain.vectorstores import Chroma
+    from langchain_community.vectorstores import Chroma
 
 
 def load_docs():

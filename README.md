@@ -12,6 +12,9 @@
 > 结合通讯组件（ROS2/TCP）与 langchain 的仿真框架，通过使用大语言模型，能够使用自然语言对机器人进行控制。  
 > [English](README-EN.md) | 中文文档
 
+## 更新记录
+* *2024/1/21* 更新至适配最新langchain版本，修复ros报错
+
 ## 简介
 
 为了使用大语言模型对机器人下达指令，让机器人理解，自行生成任务代码并执行，一种方法是将大语言模型与ROS2通信框架结合。本项目使用了 langchain 与 ROS2（or TCP），基于提示工程对机器人操作方面的提示词内容进行了设计。
@@ -140,6 +143,21 @@ ros2 run gpt_client gpt_client
 上面两种提到的示例可以在示例代码中切换。
 
 根据这些提示词，LLM 能识别我们的指令，并在服务端中转换成可以被执行的 Python 代码进行执行。我们可以修改或添加提示词，让机器人能够根据自然语言的输入执行相应的任务。
+
+## 问题
+### 1. 网络代理报错
+在使用OpenAI的接口时，可能会发生如下报错：
+`pydantic.v1.error_wrappers.ValidationError: 1 validation error for ChatOpenAI
+__root__
+  Unknown scheme for proxy URL URL('socks://127.0.0.1:7891/') (type=value_error)`
+
+解决方法：
+查看自己的代理设置，并禁用掉以 socks 开头的代理
+```bash 
+env | grep -i proxy
+unset all_proxy
+unset ALL_PROXY
+``` 
 
 ## License
 

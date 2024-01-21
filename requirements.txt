@@ -1,4 +1,7 @@
 numpy
 langchain
-chromadb
+langchain-community
+langchain-core
 tiktoken
+chromadb==0.3.29
+typing_extensions==4.8.0

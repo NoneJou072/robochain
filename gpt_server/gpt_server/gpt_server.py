@@ -3,9 +3,9 @@ import sys
 import re
 import time
 import logging
+
 logging.basicConfig(level=logging.INFO)
 
-import numpy as np
 
 COMMUNICATION_MODE = "ROS2"  # "ROS2" or "TCP"
 if COMMUNICATION_MODE == "ROS2":
@@ -93,7 +93,7 @@ def main(args=None):
 
         env.step(env.action)
 
-        if env.is_render:
+        if env.render_mode=='human':
             env.render()
 
         if not executor.spin_once(timeout_sec=0.001):

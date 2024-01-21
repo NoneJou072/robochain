@@ -24,7 +24,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            "gpt_client = gpt_client.examples.client_retrieval_codellama:main",
+            "gpt_client = gpt_client.examples.client_retrieval_gpt:main",
+            "llama_client = gpt_client.examples.client_retrieval_codellama:main",
         ],
     },
 )

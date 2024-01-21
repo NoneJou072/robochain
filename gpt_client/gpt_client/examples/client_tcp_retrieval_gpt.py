@@ -1,40 +1,28 @@
-import argparse
 import os
 import sys
-import json
 import logging
 import socket
 
 from langchain.chains import RetrievalQA
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
 from gpt_client.gpt_client.prompts.prompt_template import QA_TEMPLATE_BAICHUAN
 import gpt_client.gpt_client.commons.embedding_utils as eu
-from gpt_client.gpt_client.commons.utils import colors, streaming_print_banner
+from gpt_client.gpt_client.commons.utils import *
 
 logging.basicConfig(level=logging.INFO)
-
-
-def set_global_configs():
-    """ Load your app's keys and add to an enviroment variable. """
-
-    cfg_path = os.path.join(os.path.dirname(__file__), '../commons')
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--keys_list", type=str, default=os.path.join(cfg_path, "config.json"))
-    args = parser.parse_args()
-    with open(args.keys_list, "r") as f:
-        keys = json.load(f)
-    os.environ["OPENAI_API_KEY"] = keys["OPENAI_API_KEY"]
-    # os.environ["OPENAI_API_BASE"] = keys["OPENAI_API_BASE"]
-    os.environ["PINECONE_API_KEY"] = keys["PINECONE_API_KEY"]
 
 
 class GPTAssistant:
     """ Load ChatGPT config and your custom pre-prompts. """
 
     def __init__(self, verbose=False) -> None:
-        set_global_configs()
+        
+        logging.info("Loading keys...")
+        cfg_file = os.path.join(os.path.dirname(__file__), '../commons/config.json')
+        set_global_configs(cfg_file)
+        logging.info(f"Done.")
 
         logging.info("Initialize LLM...")
         llm = ChatOpenAI(
@@ -70,7 +58,8 @@ class GPTAssistant:
 
 
 def main(args=None):
-    IS_DUBUG = False
+    IS_DUBUG = True
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
     gpt = GPTAssistant(
         verbose=True,
     )

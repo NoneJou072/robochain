@@ -1,9 +1,10 @@
 # required for openai's llms
 openai
-sentence-transformers
+langchain-openai
 
 # required for robotic simulation
 robopal
 
 # required for huggingface models
 accelerate
+sentence-transformers

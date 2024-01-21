@@ -1,21 +1,16 @@
 import os
-import argparse
-import json
+import sys
 import logging
-
-import torch
 
 import rclpy
 from rclpy.node import Node
 from gpt_interface.srv import GPT
 
-from langchain import HuggingFacePipeline
 from langchain.chains import RetrievalQA
+from langchain_openai import ChatOpenAI
 
-from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig, AutoConfig
-from transformers import pipeline
-
-from gpt_client.prompts.prompt_template import QA_TEMPLATE
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
+from gpt_client.prompts.prompt_template import QA_TEMPLATE_BAICHUAN
 import gpt_client.commons.embedding_utils as eu
 from gpt_client.commons.utils import *
 
@@ -32,37 +27,12 @@ class GPTAssistant:
         set_global_configs(cfg_file)
         logging.info(f"Done.")
 
-        logging.info("Initialize langchain...")
-        
-        # Initialize chat model
-        model_id = 'codellama/CodeLlama-13b-Instruct-hf'
-
-        model = AutoModelForCausalLM.from_pretrained(
-            model_id,
-            trust_remote_code=True,
-            load_in_8bit=True,
-            torch_dtype=torch.float16,
-            device_map='auto',
-        )
-
-        logging.info("Initialize pipeline...")
-        generation_config = GenerationConfig.from_pretrained(model_id)
-        tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=False, trust_remote_code=True)
-        pipe = pipeline(
-            "text-generation",
-            model=model,
-            torch_dtype=torch.bfloat16,
-            device_map='auto',
-            max_length=2048,
-            repetition_penalty=1.15,
-            pad_token_id=2,
-            tokenizer=tokenizer,
-            generation_config=generation_config,
-        )
-        logging.info(f"Done.")
-
         logging.info("Initialize LLM...")
-        llm = HuggingFacePipeline(pipeline=pipe)
+        llm = ChatOpenAI(
+            model="gpt-3.5-turbo",
+            temperature=0.1,
+            max_tokens=2048,
+        )
         logging.info(f"Done.")
 
         logging.info("Initialize tools...")
@@ -71,7 +41,7 @@ class GPTAssistant:
         logging.info(f"Done.")
 
         logging.info("Initialize chain...")
-        chain_type_kwargs = {"prompt": QA_TEMPLATE, "verbose":verbose}
+        chain_type_kwargs = {"prompt": QA_TEMPLATE_BAICHUAN, "verbose": verbose}
         self.conversation = RetrievalQA.from_chain_type(
             llm=llm,
             chain_type='stuff',
@@ -128,6 +98,8 @@ class GPTClient(Node):
 
 def main(args=None):
     rclpy.init(args=args)
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
+    
     gpt_node = GPTClient(
         "gpt_client",
         is_debug=True,
