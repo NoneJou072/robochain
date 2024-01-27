@@ -1,41 +1,40 @@
 import os
 
 try:
-    from langchain.prompts.chat import PromptTemplate
+    from langchain_core.prompts.chat import PromptTemplate
 except:
-    from langchain.prompts import PromptTemplate
-from langchain.prompts.chat import (
+    from langchain_core.prompts import PromptTemplate
+from langchain_core.prompts.chat import (
     ChatPromptTemplate,
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate
 )
 
+PROMPTS_DIR = os.path.dirname(__file__)
+
 
 class PromptLoader:
-    def __init__(self) -> None:
-        self.dir_path = os.path.dirname(__file__)
-
     @property
     def pri_prompt(self) -> str:
-        with open(os.path.join(self.dir_path, "primitives.txt")) as f:
+        with open(os.path.join(PROMPTS_DIR, "primitives.txt")) as f:
             prompt = f.read()
         return prompt
 
     @property
     def sce_prompt(self) -> str:
-        with open(os.path.join(self.dir_path, "scene.txt")) as f:
+        with open(os.path.join(PROMPTS_DIR, "scene.txt")) as f:
             prompt = f.read()
         return prompt
 
     @property
     def sys_prompt(self) -> str:
-        with open(os.path.join(self.dir_path, "system.txt")) as f:
+        with open(os.path.join(PROMPTS_DIR, "system.txt")) as f:
             prompt = f.read()
         return prompt
     
     @property
     def settings_prompt(self) -> str:
-        with open(os.path.join(self.dir_path, "task_settings.txt")) as f:
+        with open(os.path.join(PROMPTS_DIR, "task_settings.txt")) as f:
             prompt = f.read()
         return prompt
     
@@ -113,7 +112,7 @@ QA_MEM_TEMPLATE = PromptTemplate(
     template=_DEFAULT_QA_TEMPLATE,
 )
 
-# 构建用于 BAICHUAN 的 RQA prompt template
+# 构建 Pure (用于 BAICHUAN/GPT) 的 RQA prompt template
 _DEFAULT_QA_TEMPLATE_BAICHUAN = _ROBOT_PROMPT_TEMPLATE + "{context}" + """
 Use the above context to answer the user's question and perform the user's command.
 -----------
@@ -146,3 +145,12 @@ QA_TEMPLATE_ZEPHYR = PromptTemplate(
     input_variables=["context", "question"],
     template=_DEFAULT_QA_TEMPLATE_ZEPHYR,
 )
+
+# 构建 ZERO_FUNC 的 prompt
+with open(os.path.join(PROMPTS_DIR, "zero-func.txt")) as f:
+    system_prompt = f.read()
+
+ZERO_FUNC_PROMPT = ChatPromptTemplate.from_messages([
+    SystemMessagePromptTemplate.from_template(system_prompt),
+    ("user", "{input}")
+])

@@ -1,3 +1,4 @@
+import logging
 import os
 import time
 import json
@@ -30,9 +31,15 @@ class colors:
     BLUE = "\033[34m"
 
 
-def set_global_configs(cfg_file):
+def set_global_configs(cfg_file: str = None):
     """ Load your app's keys and add to an enviroment variable. """
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
+    
+    if cfg_file is None:
+        cfg_file = os.path.join(os.path.dirname(__file__), 'config.json')
+    logging.info("Loading keys...")
     with open(cfg_file, "r") as f:
         keys: dict = json.load(f)
         for key, value in keys.items():
             os.environ[key] = value
+    logging.info(f"Done.")
