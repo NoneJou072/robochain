@@ -13,7 +13,7 @@ from gpt_client.gpt_client.prompts.prompt_template import *
 import gpt_client.gpt_client.commons.embedding_utils as eu
 from gpt_client.gpt_client.commons.utils import *
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARN)
 IS_DUBUG = True
 
 
@@ -59,7 +59,7 @@ class GPTAssistant:
 
 def main(args=None):
     gpt = GPTAssistant(
-        IS_DUBUG=IS_DUBUG,
+        IS_DUBUG=False,
     )
     if not IS_DUBUG:
         HOST = 'localhost'
