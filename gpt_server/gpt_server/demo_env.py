@@ -28,7 +28,7 @@ class GraspingEnv(PosCtrlEnv):
             is_pd=is_pd
         )
 
-        self.init_pos, self.init_rot = self.kdl_solver.fk(self.robot.arm_qpos, rot_format='quaternion')
+        self.init_pos, self.init_rot = self.kd_solver.fk(self.robot.arm_qpos, rot_format='quaternion')
         self.action = self.init_pos
 
     @primitive
@@ -86,14 +86,12 @@ class GraspingEnv(PosCtrlEnv):
 
     @primitive
     def get_current_pose(self):
-        return self.kdl_solver.fk(self.robot.arm_qpos, rot_format='quaternion')
+        return self.kd_solver.fk(self.robot.arm_qpos, rot_format='quaternion')
 
 
 def make_env():
     env = GraspingEnv(
         render_mode="human",
         control_freq=200,
-        is_interpolate=False,
-        is_pd=True
     )
     return env
