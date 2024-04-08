@@ -27,6 +27,8 @@
 6. 在服务端内提取出回答内包含的可执行代码片段，并执行
 7. 执行结果作为响应回传到客户端中
 
+视频demo地址：[BILIBILI VIDEO](https://www.bilibili.com/video/BV1qP411W776/)
+
 针对在线部署和离线部署，分别提供了不同的选择：
 
 |          -           |         online         |                   offline                   |
