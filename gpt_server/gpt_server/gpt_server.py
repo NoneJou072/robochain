@@ -3,6 +3,7 @@ import sys
 import re
 import time
 import logging
+import numpy as np
 
 logging.basicConfig(level=logging.INFO)
 
