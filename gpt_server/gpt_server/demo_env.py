@@ -1,6 +1,6 @@
 import numpy as np
 
-from robopal.envs.task_ik_ctrl_env import PosCtrlEnv
+from robopal.envs import RobotEnv
 from robopal.robots.diana_med import DianaGraspMultiObjs
 
 def primitive(func, checker=None):
@@ -12,20 +12,18 @@ def primitive(func, checker=None):
     return primitive_wrapper
 
 
-class GraspingEnv(PosCtrlEnv):
+class GraspingEnv(RobotEnv):
     def __init__(self,
                  robot=DianaGraspMultiObjs(),
                  render_mode="human",
                  control_freq=20,
                  is_interpolate=False,
-                 is_pd=True,
                  ):
         super().__init__(
             robot=robot,
             render_mode=render_mode,
             control_freq=control_freq,
             is_interpolate=is_interpolate,
-            is_pd=is_pd
         )
 
         self.init_pos, self.init_rot = self.controller.forward_kinematics(self.robot.get_arm_qpos())
@@ -47,7 +45,7 @@ class GraspingEnv(PosCtrlEnv):
         def checkArriveState(state):
             current_pos, current_quat = self.get_current_pose()
             error = np.sum(np.abs(state[:3] - current_pos)) + np.sum(np.abs(state[3:] - current_quat))
-            if error <= 0.01:
+            if error <= 0.02:
                 return True
             return False
 
