@@ -54,8 +54,6 @@ class GraspingEnv(RobotEnv):
         while True:
             self.action = np.concatenate((pos, quat), axis=0)
             self.step(self.action)
-            if self.render_mode == "human":
-                self.render()
             if checkArriveState(self.action):
                 break
 
@@ -79,8 +77,6 @@ class GraspingEnv(RobotEnv):
         while True:
             step += 1
             self.step(self.action)
-            if self.render_mode == "human":
-                self.render()
             if step > 80:
                 break
 
@@ -92,7 +88,7 @@ class GraspingEnv(RobotEnv):
 def make_env():
     env = GraspingEnv(
         render_mode="human",
-        control_freq=200,
+        control_freq=100,
     )
     return env
 
