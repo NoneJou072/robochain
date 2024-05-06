@@ -18,12 +18,14 @@ class GraspingEnv(RobotEnv):
                  render_mode="human",
                  control_freq=20,
                  is_interpolate=False,
+                 controller="CARTIK",
                  ):
         super().__init__(
             robot=robot,
             render_mode=render_mode,
             control_freq=control_freq,
             is_interpolate=is_interpolate,
+            controller=controller,
         )
 
         self.init_pos, self.init_rot = self.controller.forward_kinematics(self.robot.get_arm_qpos())
@@ -93,3 +95,9 @@ def make_env():
         control_freq=200,
     )
     return env
+
+if __name__ == "__main__":
+    env = make_env()
+    env.reset()
+    env.move(np.array([0.6, 0.3, 0.2]), np.array([1, 0, 0, 0]))
+    env.close()
