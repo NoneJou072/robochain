@@ -14,7 +14,7 @@ def primitive(func, checker=None):
 
 class GraspingEnv(RobotEnv):
     def __init__(self,
-                 robot=DianaGraspMultiObjs(),
+                 robot=DianaGraspMultiObjs,
                  render_mode="human",
                  control_freq=20,
                  is_interpolate=False,
