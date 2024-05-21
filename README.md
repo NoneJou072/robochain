@@ -92,8 +92,8 @@ robopal(optional but recommended)
 ### 2. 运行
 **A. 使用 ROS2 进行通讯**
 
-分别在两个终端中启动 llm 服务端和 robot 客户端，等待初始化完成后，
-我们可以在终端内输入请求或问题，等待服务端执行或回应。
+分别在两个终端中启动 llm 服务端和 robot 客户端，（不要忘记`source install/setup.bash`）
+等待初始化完成后，我们可以在终端内输入请求或问题，等待服务端执行或回应。
 ```bash
 # Terminal 1
 ros2 run gpt_server gpt_server
