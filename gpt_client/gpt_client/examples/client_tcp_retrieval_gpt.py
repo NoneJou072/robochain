@@ -58,7 +58,7 @@ class GPTAssistant:
 
 
 def main(args=None):
-    IS_DUBUG = True
+    IS_DUBUG = False
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
     gpt = GPTAssistant(
         verbose=True,
