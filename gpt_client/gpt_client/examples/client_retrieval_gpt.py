@@ -102,7 +102,7 @@ def main(args=None):
     
     gpt_node = GPTClient(
         "gpt_client",
-        is_debug=True,
+        is_debug=False,
         verbose=True
     )
     
